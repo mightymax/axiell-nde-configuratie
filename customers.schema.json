@@ -1,0 +1,37 @@
+{
+  "$id": "https://nde-apw.adlibhosting.com/shared/customers.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LDWorkbenchConfiguration",
+  "description": "JSON Schema for LDWorkbench.\nIt helps with the writing of the configuration needed to run LDWorkbench pipelines.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["ID", "baseURL"],
+    "properties": {
+      "ID": {
+        "type": "string",
+        "pattern": "^Q[0-9]+$",
+        "description": "The ID of the customer, it should be a Wikidata 'Q' number. This ID will be part of the URL for the dataset."
+      },
+      "accessLevel": {
+        "type": "string",
+        "description": "Visibility of the dataset and queries.",
+        "enum": ["public", "private", "internal"]
+      },
+      "name": {
+        "type": "string",
+        "description": "Human readable name, not used in the ETL (it uses ?verb=Identify)"
+      },
+      "baseURL": {
+        "type": "string",
+        "description": "The Axiell OAI-PMH Base URL.",
+        "pattern": "^https:\/\/"
+      },
+      "ignore": {
+        "type": "boolean",
+        "description": "Do not process this customer."
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+[
+  {
+    "ID": "Q4350196",
+    "name": "Museum Kranenburgh",
+    "accessLevel": "public",
+    "baseURL": "https://nde-apw.adlibhosting.com/Q4350196/oai.ashx"
+  },
+  {
+    "ID": "Q2022136",
+    "name": "Keramiekcentrum Tiendschuur Tegelen",
+    "accessLevel": "public",
+    "baseURL": "https://nde-apw.adlibhosting.com/Q2022136/oai.ashx"
+  },
+  {
+    "ID": "Q667906",
+    "name": "Stichting Haarlemmermeermuseum de Cruquius",
+    "baseURL": "https://nde-apw.adlibhosting.com/Q667906/oai.ashx"
+  },
+  {
+    "ID": "Q124789040",
+    "name": "Historische Vereniging Westelijk Voorne",
+    "baseURL": "https://nde-apw.adlibhosting.com/Q124789040/oai.ashx"
+  },
+  {
+    "ID": "Q1820897",
+    "name": "Amsterdam Museum",
+    "baseURL": "https://nde-apw.adlibhosting.com/Q1820897/oai.ashx"
+  },
+  {
+    "ID": "Q109205757",
+    "name": "Stichting Melkboeren- en Zuivelmuseum 'De Melkmaten'",
+    "baseURL": "https://nde-apw.adlibhosting.com/Q109205757/oai.ashx"
+  },
+  {
+    "ID": "Q623558",
+    "name": "De Oude Kerk",
+    "accessLevel": "public",
+    "baseURL": "https://nde-apw.adlibhosting.com/Q623558/oai.ashx"
+  },
+  {
+    "ID": "Q124789020",
+    "name": "Stichting DKOR - Kunstambassadeurs Almere",
+    "baseURL": "https://nde-apw.adlibhosting.com/Q124789020/oai.ashx"
+  },
+  {
+    "ID": "Q14510918",
+    "accessLevel": "public",
+   "baseURL": "https://nde-apw.adlibhosting.com/Q14510918/oai.ashx"
+  },
+  {
+    "ID": "Q2798268",
+    "name": "Universiteits Museum Utrecht",
+    "baseURL": "https://nde-apw.adlibhosting.com/Q2798268/oai.ashx"
+  }
+]
