@@ -46,6 +46,7 @@
     "ID": "Q14510918",
     "accessLevel": "public",
     "name": "Universiteitsmuseum Utrecht",
+    "ignore": true,
     "baseURL": "https://nde-apw.adlibhosting.com/Q14510918/oai.ashx"
   },
   {
