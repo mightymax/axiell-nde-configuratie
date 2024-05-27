@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>Axiell | NDE Configuratie</title>
+    </head>
+  <body>
+    <div class="container">
+      <h1>Axiell | NDE Configuratie</h1>
+      <p class="lead">
+        Overzicht en test t.b.v. Axiell NDE configuraties om Axiell databases te publiceren als Linked Data op <a href="https://data.axiell.com">data.axiell.com</a>.
+      </p>
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">bezig met laden &hellip'</span>
+      </div>
+      <table class="table" style="display: none;">
+        <thead>
+          <th><i class="bi bi-shield-lock-fill" data-bs-toggle="tooltip" data-bs-title="Geeft aan of de dataset openbaar beschikbaar is."></i></th>
+          <th><i class="bi bi-toggles" data-bs-toggle="tooltip" data-bs-title="Geeft aan of de collectie/klant door de ETL wordt verwerkt."></i></th>
+          <th>Code</th>
+          <th>Naam</th>
+          <th>Links</th>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+      window.onload = () => {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+        fetch('customers.json')
+          .then(res => res.json())
+          .then(customers => {
+            const tbody = document.querySelector('tbody')
+            for (const customer of customers) {
+              const tr = document.createElement('tr')
+              tr.id = customer.ID
+              tr.dataset.baseURL = customer.baseURL
+              let cell = document.createElement('td')
+              cell.innerHTML = customer.accessLevel === 'public'
+                ? '<i class="bi bi-unlock text-success fw-bold"></i>'
+                : '<i class="bi bi-lock fw-bold"></i>'
+              tr.appendChild(cell)
+
+              cell = document.createElement('td')
+              cell.innerHTML = customer.ignore === true
+                ? '<i class="bi bi-toggle-off text-danger"></i>'
+                : '<i class="bi bi-toggle-on"></i>'
+              tr.appendChild(cell)
+
+              cell = document.createElement('td')
+              cell.innerHTML = customer.ID
+              tr.appendChild(cell)
+
+              cell = document.createElement('td')
+              cell.innerText = customer.name
+              tr.appendChild(cell)
+
+              cell = document.createElement('td')
+              // cell.innerHTML = `<a class="customer-test" href="#${customer.ID}"><span>test</span></a>`
+              cell.innerHTML = `
+<div class="dropdown">
+  <button class="btn btn-sm btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Links
+  </button>
+  <ul class="dropdown-menu">
+    <li><a target="_blank" class="dropdown-item" href="${customer.baseURL}?verb=Identify">OAI <code>Identify</code></a></li>
+    <li><a target="_blank" class="dropdown-item" href="${customer.baseURL}?verb=ListRecords&amp;set=collect&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (collect)</a></li>
+    <li><a target="_blank" class="dropdown-item" href="${customer.baseURL}?verb=ListRecords&amp;set=person&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (person)</a></li>
+    <li><a target="_blank" class="dropdown-item" href="${customer.baseURL}?verb=ListRecords&amp;set=media&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (media)</a></li>
+    <li><a target="_blank" class="dropdown-item" href="${customer.baseURL}?verb=ListRecords&amp;set=thesau&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (thesau)</a></li>
+    <li><a target="_blank" class="dropdown-item" href="${customer.baseURL}?verb=ListRecords&amp;set=geothesau&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (geothesau)</a></li>
+    <li>
+      <hr class="dropdown-divider">
+    </li>
+    <li><a target="_blank" class="dropdown-item" href="https://www.wikidata.org/wiki/${customer.ID}">WikiData</a></li>
+    <li><a target="_blank" class="dropdown-item" href="https://data.axiell.com/${customer.ID}/dataset">Dataset Triply</a></li>
+    <li><a target="_blank" class="dropdown-item" href="https://datasetregister.netwerkdigitaalerfgoed.nl/show.php?uri=https%3A%2F%2Fdata.axiell.com%2F${customer.ID}%2Fdataset">NDE Datasetregister</a></li>
+  </ul>
+</div>
+              `
+              tr.appendChild(cell)
+
+              tbody.append(tr)
+            }
+            for (const a of Array.from(document.querySelectorAll('a.customer-test'))) {
+              a.addEventListener('XXXclick', (e) => {
+                e.preventDefault()
+                a.classList.add('spinner-border')
+                a.querySelector('span').classList.add('visually-hidden')
+                const ID = (new URL(a.href)).hash.replace('#', '')
+                const tr = document.getElementById(ID)
+                const baseURL = tr.dataset.baseURL
+                fetch(`${tr.dataset.baseURL}?verb=Identify`)
+                  .then(res => {
+                    if (res.ok) {
+                      alert(`so far so good`)
+                    } else {
+                      alert(`HTTP response fout #{${res.statusCode} voor ${tr.dataset.baseURL}: ${res.statusText}`)
+                    }
+                  })
+                  .catch(e => {
+                      alert(`Kan OAI-PMH endpoint ${tr.dataset.baseURL} niet laden.`)
+                      console.error(e)
+                  })
+              })
+            }
+            document.querySelector('table').style.display = 'inherit'
+            document.querySelector('.spinner-border').style.display = 'none'
+          })
+      }
+    </script>
+  </body>
+</html>

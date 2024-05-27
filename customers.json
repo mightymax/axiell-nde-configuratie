@@ -53,5 +53,131 @@
     "ID": "Q2798268",
     "name": "Limburgs Museum",
     "baseURL": "https://nde-apw.adlibhosting.com/Q2798268/oai.ashx"
+  },
+  {
+    "ID": "Q23437720",
+    "name": "Museum Wierdenland",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q23437720/oai.ashx"
+  },
+  {
+    "ID": "Q2882945",
+    "name": "Grid Groningen",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q2882945/oai.ashx"
+  },
+  {
+    "ID": "Q56460642",
+    "name": "Museum Nienoord",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q56460642/oai.ashx"
+  },
+  {
+    "ID": "Q2775823",
+    "name": "Borg Verhildersum",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q2775823/oai.ashx"
+  },
+  {
+    "ID": "Q13134395",
+    "name": "Boerderijmuseum 't Rieuw",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q13134395/oai.ashx"
+  },
+  {
+    "ID": "Q110978413",
+    "name": "Museum Klooster Ter Apel",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q110978413/oai.ashx"
+  },
+  {
+    "ID": "Q110986304",
+    "name": "Museum Het Behouden Blik",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q110986304/oai.ashx"
+  },
+  {
+    "ID": "Q2491328",
+    "name": "Veenkoloniaal Museum",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q2491328/oai.ashx"
+  },
+  {
+    "ID": "Q19251678",
+    "name": "Openlucht Museum Het Hooge Land",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q19251678/oai.ashx"
+  },
+  {
+    "ID": "Q56461202",
+    "name": "Visserijmuseum Zoutkamp",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q56461202/oai.ashx"
+  },
+  {
+    "ID": "Q17590402",
+    "name": "Historische Scheepswerf Wolthuis",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q17590402/oai.ashx"
+  },
+  {
+    "ID": "Q2392619",
+    "name": "Synagoge Groningen",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q2392619/oai.ashx"
+  },
+  {
+    "ID": "Q110414440",
+    "name": "Jan Menze van Diepenstichting",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q110414440/oai.ashx"
+  },
+  {
+    "ID": "Q2575273",
+    "name": "Nationaal Bus museum",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q2575273/oai.ashx"
+  },
+  {
+    "ID": "Q125958534",
+    "name": "Gerrit van Houten stichting",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q125958534/oai.ashx"
+  },
+  {
+    "ID": "Q121900753",
+    "name": "Museum aan de A",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q121900753/oai.ashx"
+  },
+  {
+    "ID": "Q15961660",
+    "name": "Vestingmuseum Oudeschans",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q15961660/oai.ashx"
+  },
+  {
+    "ID": "Q13612139",
+    "name": "Museum de Oude Wolden",
+    "accessLevel": "public",
+    "ignore": true,
+    "baseURL": "https://nde-apw.adlibhosting.com/Q13612139/oai.ashx"
   }
 ]
