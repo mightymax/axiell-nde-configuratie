@@ -18,8 +18,9 @@
       </div>
       <table class="table" style="display: none;">
         <thead>
-          <th><i class="bi bi-shield-lock-fill" data-bs-toggle="tooltip" data-bs-title="Geeft aan of de dataset openbaar beschikbaar is."></i></th>
-          <th><i class="bi bi-toggles" data-bs-toggle="tooltip" data-bs-title="Geeft aan of de collectie/klant door de ETL wordt verwerkt."></i></th>
+          <th><i class="bi bi-shield" data-bs-toggle="tooltip" data-bs-title="Geeft aan of de dataset openbaar beschikbaar is."></i></th>
+          <th><i class="bi bi-question-square" data-bs-toggle="tooltip" data-bs-title="Geeft aan of de collectie/klant door de ETL wordt verwerkt."></i></th>
+          <th>Logo's</th>
           <th>Code</th>
           <th>Naam</th>
           <th>Links</th>
@@ -43,14 +44,21 @@
               tr.dataset.baseURL = customer.baseURL
               let cell = document.createElement('td')
               cell.innerHTML = customer.accessLevel === 'public'
-                ? '<i class="bi bi-unlock text-success fw-bold"></i>'
+                ? '<i class="bi bi-globe fw-bold"></i>'
                 : '<i class="bi bi-lock fw-bold"></i>'
               tr.appendChild(cell)
 
               cell = document.createElement('td')
               cell.innerHTML = customer.ignore === true
-                ? '<i class="bi bi-toggle-off text-danger"></i>'
-                : '<i class="bi bi-toggle-on"></i>'
+                ? '<i class="bi bi-square"></i>'
+                : '<i class="bi bi-check-square-fill"></i>'
+              tr.appendChild(cell)
+
+              cell = document.createElement('td')
+              cell.innerHTML = `
+                <img style="height:24px;" src="logos/${customer.ID}.png" alt="">
+                <img style="height:24px;" src="logos/${customer.ID}-dataset.png" alt="">
+                <img style="height:24px;" src="logos/${customer.ID}-organisatie.png" alt="">`
               tr.appendChild(cell)
 
               cell = document.createElement('td')
