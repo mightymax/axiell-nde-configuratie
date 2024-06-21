@@ -23,6 +23,7 @@
           <th>Logo's</th>
           <th>Code</th>
           <th>Naam</th>
+          <th>Wikidata beschrijving</th>
           <th>Links</th>
         </thead>
         <tbody></tbody>
@@ -67,12 +68,39 @@
 
               cell = document.createElement('td')
               cell.innerText = customer.name
+              cell.id = `wd-cell-naam-${customer.ID}`
               tr.appendChild(cell)
+
+              cell = document.createElement('td')
+              cell.id=`wd-cell-${customer.ID}`
+              cell.classList.add('text-center')
+              cell.innerHTML = '<div class="spinner-border text-light" role="status"><span class="visually-hidden">Loading...</span></div>'
+              const url = `https://www.wikidata.org/wiki/${customer.ID}`
+              tr.appendChild(cell)
+              getRepositoryDescription(customer)
+                .then(result => {
+                  const cell = document.getElementById(`wd-cell-${customer.ID}`)
+                  cell.innerHTML = ''
+                  if (result.naam !== customer.name) {
+                    cell.innerHTML = `<small><i class="bi bi-exclamation-circle-fill"></i> naam volgens wikidata: "<em class="fw-bold">${result.naam}</em>"</small><br>`
+                  }
+                  cell.innerHTML += `<small>${result.omschrijving}</small>`
+                  cell.classList.remove('text-center')
+                  if (result.website) {
+                    const dd = document.getElementById(`dropdown-${customer.ID}`)
+                    dd.innerHTML = dd.innerHTML.replace('<!-- {WEBSITE} -->', `<li><a target="_blank" class="dropdown-item" href="${result.website}">Website (via WikiData)</a></li>`)
+                    website = result.website
+                  }
+                }).catch(e => {
+                  console.log(e)
+                  const cell = document.getElementById(`wd-cell-${customer.ID}`)
+                  cell.innerHTML = '<span class="text-danger"><i class="bi bi-exclamation-circle-fill"></i> Fout!</span>'
+                })
 
               cell = document.createElement('td')
               // cell.innerHTML = `<a class="customer-test" href="#${customer.ID}"><span>test</span></a>`
               cell.innerHTML = `
-<div class="dropdown">
+<div class="dropdown" id="dropdown-${customer.ID}">
   <button class="btn btn-sm btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
     Links
   </button>
@@ -86,6 +114,7 @@
     <li>
       <hr class="dropdown-divider">
     </li>
+    <!-- {WEBSITE} -->
     <li><a target="_blank" class="dropdown-item" href="https://www.wikidata.org/wiki/${customer.ID}">WikiData</a></li>
     <li><a target="_blank" class="dropdown-item" href="https://data.axiell.com/${customer.ID}/dataset">Dataset Triply</a></li>
     <li><a target="_blank" class="dropdown-item" href="https://datasetregister.netwerkdigitaalerfgoed.nl/show.php?uri=https%3A%2F%2Fdata.axiell.com%2F${customer.ID}%2Fdataset">NDE Datasetregister</a></li>
@@ -122,6 +151,35 @@
             document.querySelector('.spinner-border').style.display = 'none'
           })
       }
+
+      async function getRepositoryDescription (customer) {
+        const query = `
+      select ?omschrijving ?website ?naam where {
+      wd:${customer.ID} schema:description ?omschrijving; rdfs:label ?naam .
+      optional { wd:${customer.ID} wdt:P856 ?website }
+      filter(lang(?omschrijving) = 'nl')
+      filter(lang(?naam) = 'nl')
+      } limit 1`
+        const headers = { Accept: 'application/sparql-results+json' }
+        return await fetch(`https://query.wikidata.org/sparql?query=${query}`, { headers })
+          .then(async res => {
+            if (res.ok) {
+               return await res.json()
+                .then(async bindings => {
+                  if (bindings !== undefined && bindings.results.bindings.length > 0) {
+                    const binding = bindings.results.bindings.shift()
+                    const naam = binding.naam.value
+                    const omschrijving = binding.omschrijving.value
+                    const website = binding.website === undefined ? undefined : binding.website.value
+                    return await Promise.resolve({naam, omschrijving, website})
+                  }
+                  else return await Promise.reject(`Failed to query Wikidata for ${customer.ID}: no results for query`)
+                })
+            }
+            else return await Promise.reject(`Failed to query Wikidata for Q${customer.ID}: ${res.status} / ${res.statusText}`)
+          })
+      }
+
     </script>
   </body>
 </html>
