@@ -134,6 +134,14 @@
     </xsl:call-template>
   </xsl:template>
 
+  <xsl:template match="rights.type">
+    <sdo:copyrightNotice><xsl:value-of select="."/></sdo:copyrightNotice>
+  </xsl:template>
+
+  <xsl:template match="rights.holder.lref">
+    <sdo:copyrightHolder rdf:resource="{$baseUri}/persons-and-organisations/{.}"/>
+  </xsl:template>
+
   <xsl:template match="
       Associated_person/association.person.lref 
     | Associated_subject/association.subject.lref
