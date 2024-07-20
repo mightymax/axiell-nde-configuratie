@@ -134,11 +134,11 @@
     </xsl:call-template>
   </xsl:template>
 
-  <xsl:template match="rights.type">
+  <xsl:template match="Rights/rights.type">
     <sdo:copyrightNotice><xsl:value-of select="."/></sdo:copyrightNotice>
   </xsl:template>
 
-  <xsl:template match="rights.holder.lref">
+  <xsl:template match="Rights/rights.holder.lref">
     <sdo:copyrightHolder rdf:resource="{$baseUri}/persons-and-organisations/{.}"/>
   </xsl:template>
 
