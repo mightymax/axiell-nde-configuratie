@@ -30,7 +30,7 @@
         <xsl:apply-templates select="./@created | ./@modification | term.type| term | equivalent_term |
         used_for | scope_note | broader_term.lref | narrower_term.lref | related_term.lref| guid
         | term/value[@lang!='neutral']| equivalent_term/value[@lang!='neutral']| used_for/value[@lang!='neutral']
-        | scope_note/value[@lang!='neutral']
+        | scope_note/value[@lang!='neutral'] | Source/source.number
         "/>
       </skos:Concept>
     </rdf:RDF>
@@ -82,6 +82,10 @@
   <skos:ConceptSchema rdf:about="{$baseUri}/{$database}/{value[@lang='neutral']/text()}">
     <xsl:apply-templates select="./value"/>
   </skos:ConceptSchema>
+  </xsl:template>
+
+  <xsl:template match="Source/source.number">
+    <skos:exactMatch  rdf:resource="{.}"/>
   </xsl:template>
 
   <xsl:template match="value[@lang='neutral']">
