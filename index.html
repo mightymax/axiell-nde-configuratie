@@ -18,8 +18,6 @@
       </div>
       <table class="table" style="display: none;">
         <thead>
-          <th><i class="bi bi-shield" data-bs-toggle="tooltip" data-bs-title="Geeft aan of de dataset openbaar beschikbaar is."></i></th>
-          <th><i class="bi bi-question-square" data-bs-toggle="tooltip" data-bs-title="Geeft aan of de collectie/klant door de ETL wordt verwerkt."></i></th>
           <th>Logo's</th>
           <th>Code</th>
           <th>Naam</th>
@@ -35,89 +33,80 @@
       window.onload = () => {
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-        fetch('customers.json')
-          .then(res => res.json())
-          .then(customers => {
+        fetch('customers.txt')
+          .then(res => res.text())
+          .then(csv => csv.split("\n")
+            .filter(line => line.match(/Q\d+/))
+            .map(l => l.split(',').shift())
+          )
+          .then(ids => {
             const tbody = document.querySelector('tbody')
-            for (const customer of customers) {
+            for (const ID of ids) {
               const tr = document.createElement('tr')
-              tr.id = customer.ID
-              tr.dataset.baseURL = customer.baseURL
+              tr.id = ID
+              tr.dataset.baseURL = `https://nde-apw.adlibhosting.com/${ID}/oai.ashx`
+
               let cell = document.createElement('td')
-              cell.innerHTML = customer.accessLevel === 'public'
-                ? '<i class="bi bi-globe fw-bold"></i>'
-                : '<i class="bi bi-lock fw-bold"></i>'
-              tr.appendChild(cell)
-
-              cell = document.createElement('td')
-              cell.innerHTML = customer.ignore === true
-                ? '<i class="bi bi-square"></i>'
-                : '<i class="bi bi-check-square-fill"></i>'
-              tr.appendChild(cell)
-
-              cell = document.createElement('td')
               cell.innerHTML = `
-                <img style="height:24px;" class="rounded-circle" src="logos/${customer.ID}.png" alt="">
-                <img style="height:24px;" class="rounded-circle" src="logos/${customer.ID}-dataset.png" alt="">
-                <img style="height:24px;" class="rounded-circle" src="logos/${customer.ID}-organisatie.png" alt="">`
+                <img style="height:24px;" class="rounded-circle" src="logos/${ID}.png" alt="">
+                <img style="height:24px;" class="rounded-circle" src="logos/${ID}-dataset.png" alt="">
+                <img style="height:24px;" class="rounded-circle" src="logos/${ID}-organisatie.png" alt="">`
               tr.appendChild(cell)
 
               cell = document.createElement('td')
-              cell.innerHTML = customer.ID
+              cell.innerHTML = ID
               tr.appendChild(cell)
 
               cell = document.createElement('td')
-              cell.innerText = customer.name
-              cell.id = `wd-cell-naam-${customer.ID}`
+              cell.innerText = ID
+              cell.id = `wd-cell-naam-${ID}`
               tr.appendChild(cell)
 
               cell = document.createElement('td')
-              cell.id=`wd-cell-${customer.ID}`
+              cell.id=`wd-cell-${ID}`
               cell.classList.add('text-center')
               cell.innerHTML = '<div class="spinner-border text-light" role="status"><span class="visually-hidden">Loading...</span></div>'
-              const url = `https://www.wikidata.org/wiki/${customer.ID}`
+              const url = `https://www.wikidata.org/wiki/${ID}`
               tr.appendChild(cell)
-              getRepositoryDescription(customer)
+              getRepositoryDescription(ID)
                 .then(result => {
-                  const cell = document.getElementById(`wd-cell-${customer.ID}`)
+                  const cell = document.getElementById(`wd-cell-${ID}`)
                   cell.innerHTML = ''
-                  if (result.naam !== customer.name) {
-                    cell.innerHTML = `<small><i class="bi bi-exclamation-circle-fill"></i> naam volgens wikidata: "<em class="fw-bold">${result.naam}</em>"</small><br>`
-                  }
                   cell.innerHTML += `<small>${result.omschrijving}</small>`
                   cell.classList.remove('text-center')
                   if (result.website) {
-                    const dd = document.getElementById(`dropdown-${customer.ID}`)
+                    const dd = document.getElementById(`dropdown-${ID}`)
                     dd.innerHTML = dd.innerHTML.replace('<!-- {WEBSITE} -->', `<li><a target="_blank" class="dropdown-item" href="${result.website}">Website (via WikiData)</a></li>`)
                     website = result.website
                   }
+                  document.getElementById(`wd-cell-naam-${ID}`).innerHTML = result.naam
                 }).catch(e => {
                   console.log(e)
-                  const cell = document.getElementById(`wd-cell-${customer.ID}`)
+                  const cell = document.getElementById(`wd-cell-${ID}`)
                   cell.innerHTML = '<span class="text-danger"><i class="bi bi-exclamation-circle-fill"></i> Fout!</span>'
                 })
 
               cell = document.createElement('td')
-              // cell.innerHTML = `<a class="customer-test" href="#${customer.ID}"><span>test</span></a>`
+              // cell.innerHTML = `<a class="customer-test" href="#${ID}"><span>test</span></a>`
               cell.innerHTML = `
-<div class="dropdown" id="dropdown-${customer.ID}">
+<div class="dropdown" id="dropdown-${ID}">
   <button class="btn btn-sm btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
     Links
   </button>
   <ul class="dropdown-menu">
-    <li><a target="_blank" class="dropdown-item" href="${customer.baseURL}?verb=Identify">OAI <code>Identify</code></a></li>
-    <li><a target="_blank" class="dropdown-item" href="${customer.baseURL}?verb=ListRecords&amp;set=collect&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (collect)</a></li>
-    <li><a target="_blank" class="dropdown-item" href="${customer.baseURL}?verb=ListRecords&amp;set=person&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (person)</a></li>
-    <li><a target="_blank" class="dropdown-item" href="${customer.baseURL}?verb=ListRecords&amp;set=media&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (media)</a></li>
-    <li><a target="_blank" class="dropdown-item" href="${customer.baseURL}?verb=ListRecords&amp;set=thesau&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (thesau)</a></li>
-    <li><a target="_blank" class="dropdown-item" href="${customer.baseURL}?verb=ListRecords&amp;set=geothesau&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (geothesau)</a></li>
+    <li><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=Identify">OAI <code>Identify</code></a></li>
+    <li><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=ListRecords&amp;set=collect&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (collect)</a></li>
+    <li><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=ListRecords&amp;set=person&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (person)</a></li>
+    <li><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=ListRecords&amp;set=media&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (media)</a></li>
+    <li><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=ListRecords&amp;set=thesau&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (thesau)</a></li>
+    <li><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=ListRecords&amp;set=geothesau&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (geothesau)</a></li>
     <li>
       <hr class="dropdown-divider">
     </li>
     <!-- {WEBSITE} -->
-    <li><a target="_blank" class="dropdown-item" href="https://www.wikidata.org/wiki/${customer.ID}">WikiData</a></li>
-    <li><a target="_blank" class="dropdown-item" href="https://data.axiell.com/${customer.ID}/dataset">Dataset Triply</a></li>
-    <li><a target="_blank" class="dropdown-item" href="https://datasetregister.netwerkdigitaalerfgoed.nl/show.php?uri=https%3A%2F%2Fdata.axiell.com%2F${customer.ID}%2Fdataset">NDE Datasetregister</a></li>
+    <li><a target="_blank" class="dropdown-item" href="https://www.wikidata.org/wiki/${ID}">WikiData</a></li>
+    <li><a target="_blank" class="dropdown-item" href="https://data.axiell.com/${ID}/dataset">Dataset Triply</a></li>
+    <li><a target="_blank" class="dropdown-item" href="https://datasetregister.netwerkdigitaalerfgoed.nl/show.php?uri=https%3A%2F%2Fdata.axiell.com%2F${ID}%2Fdataset">NDE Datasetregister</a></li>
   </ul>
 </div>
               `
@@ -152,11 +141,11 @@
           })
       }
 
-      async function getRepositoryDescription (customer) {
+      async function getRepositoryDescription (ID) {
         const query = `
       select ?omschrijving ?website ?naam where {
-      wd:${customer.ID} schema:description ?omschrijving; rdfs:label ?naam .
-      optional { wd:${customer.ID} wdt:P856 ?website }
+      wd:${ID} schema:description ?omschrijving; rdfs:label ?naam .
+      optional { wd:${ID} wdt:P856 ?website }
       filter(lang(?omschrijving) = 'nl')
       filter(lang(?naam) = 'nl')
       } limit 1`
@@ -173,10 +162,10 @@
                     const website = binding.website === undefined ? undefined : binding.website.value
                     return await Promise.resolve({naam, omschrijving, website})
                   }
-                  else return await Promise.reject(`Failed to query Wikidata for ${customer.ID}: no results for query`)
+                  else return await Promise.reject(`Failed to query Wikidata for ${ID}: no results for query`)
                 })
             }
-            else return await Promise.reject(`Failed to query Wikidata for Q${customer.ID}: ${res.status} / ${res.statusText}`)
+            else return await Promise.reject(`Failed to query Wikidata for Q${ID}: ${res.status} / ${res.statusText}`)
           })
       }
 
