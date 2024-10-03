@@ -1,0 +1,162 @@
+{
+    "@context": {
+      "@version": 1.1,
+      "iiif_prezi": "http://iiif.io/api/presentation/3#",
+      "iiif_image": "http://iiif.io/api/image/3#",
+      "exif": "http://www.w3.org/2003/12/exif/ns#",
+      "oa": "http://www.w3.org/ns/oa#",
+      "dc": "http://purl.org/dc/elements/1.1/",
+      "dcterms": "http://purl.org/dc/terms/",
+      "dctypes": "http://purl.org/dc/dcmitype/",
+      "foaf": "http://xmlns.com/foaf/0.1/",
+      "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+      "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+      "xsd": "http://www.w3.org/2001/XMLSchema#",
+      "as": "http://www.w3.org/ns/activitystreams#",
+      "ebu": "http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#",
+      "schema": "https://schema.org/",
+      "id": "@id",
+      "type": "@type",
+      "Image": "dctypes:StillImage",
+      "Text": "dctypes:Text",
+      "Manifest": {
+        "@id": "iiif_prezi:Manifest",
+        "@context": {
+          "partOf": {
+            "@id": "dcterms:partOf",
+            "@type": "@id",
+            "@container": "@set"
+          }
+        }
+      },
+      "ImageService3": "iiif_image:ImageService",
+      "AnnotationPage": {
+        "@id": "as:OrderedCollectionPage",
+        "@context": [
+          {
+            "label": {
+              "@id": "rdfs:label",
+              "@container": [
+                "@language",
+                "@set"
+              ],
+              "@context": {
+                "none": "@none"
+              }
+            }
+          }
+        ]
+      },
+      "Annotation": {
+        "@id": "oa:Annotation",
+        "@context": [
+          {
+            "label": {
+              "@id": "rdfs:label",
+              "@container": [
+                "@language",
+                "@set"
+              ],
+              "@context": {
+                "none": "@none"
+              }
+            }
+          }
+        ]
+      },
+      "Canvas": {
+        "@id": "iiif_prezi:Canvas",
+        "@context": {
+          "partOf": {
+            "@id": "dcterms:partOf",
+            "@type": "@id",
+            "@container": "@set"
+          }
+        }
+      },
+  		"Agent": "dcterms:Agent",
+      "metadata": {
+        "@type": "@id",
+        "@id": "iiif_prezi:metadataEntries",
+        "@container": "@set"
+      },
+      "value": {
+        "@id": "rdf:value",
+        "@container": [
+          "@language",
+          "@set"
+        ],
+        "@context": {
+          "none": "@none"
+        }
+      },
+      "profile": "dcterms:conformsTo",
+      "label": {
+        "@id": "rdfs:label",
+        "@container": [
+          "@language",
+          "@set"
+        ],
+        "@context": {
+          "none": "@none"
+        }
+      },
+      "summary": {
+        "@id": "as:summary",
+        "@container": [
+          "@language",
+          "@set"
+        ],
+        "@context": {
+          "none": "@none"
+        }
+      },
+      "logo": {
+        "@type": "@id",
+        "@id": "foaf:logo",
+        "@container": "@set"
+      },
+      "format": {
+        "@id": "dc:format"
+      },
+      "motivation": "iiif_prezi:motivation",
+      "target": "iiif_prezi:target",
+      "body": "oa:hasBody",
+      "requiredStatement": {
+        "@id": "iiif_prezi:requiredStatement",
+        "@type": "@id"
+      },
+      "thumbnail": {
+        "@type": "@id",
+        "@id": "iiif_prezi:thumbnail",
+        "@container": "@set"
+      },
+      "seeAlso": {
+        "@type": "@id",
+        "@id": "rdfs:seeAlso"
+      },
+      "homepage": {
+        "@type": "@id",
+        "@id": "foaf:homepage",
+        "@container": "@set"
+      },
+      "items": {
+        "@type": "@id",
+        "@id": "as:items",
+        "@container": "@set"
+      },
+      "height": {
+        "@id": "exif:height",
+        "@type": "xsd:integer"
+      },
+      "width": {
+        "@id": "exif:width",
+        "@type": "xsd:integer"
+      },
+      "provider": {
+        "@type": "@id",
+        "@id": "schema:provider",
+        "@container": "@set"
+      }
+    }
+}
