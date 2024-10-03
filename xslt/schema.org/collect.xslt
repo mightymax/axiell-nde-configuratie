@@ -65,6 +65,10 @@
   <xsl:template match="Reproduction/reproduction.reference.lref">
     <sdo:associatedMedia rdf:resource="{$baseUri}/media/{.}" />
   </xsl:template>
+  <!-- 5.x -->
+  <xsl:template match="Media/media.reference.lref">
+    <sdo:associatedMedia rdf:resource="{$baseUri}/media/{.}" />
+  </xsl:template>
   <!-- 4.x -->
   <xsl:template match="Production/production.place.lref">
     <sdo:locationCreated rdf:resource="{$baseUri}/thesaurus/{.}" />
@@ -122,6 +126,32 @@
       <sdo:startDate>
         <xsl:call-template name="xsdDateParser">
           <xsl:with-param name="value" select="production.date.start"/> 
+        </xsl:call-template>
+      </sdo:startDate>      
+    </xsl:otherwise>
+   </xsl:choose>
+  </xsl:template>
+  <!-- 5.x -->
+  <xsl:template match="Dating">
+   <!-- What kind of data is this? -->
+   <xsl:choose>
+    <xsl:when test="dating.date.end and dating.date.end = dating.date.start">
+      <sdo:temporal>
+        <xsl:call-template name="xsdDateParser">
+          <xsl:with-param name="value" select="dating.date.end"/> 
+        </xsl:call-template>
+      </sdo:temporal>      
+    </xsl:when>
+    <xsl:otherwise>
+      <!-- This is semantically incorrect! -->
+      <sdo:endDate>
+        <xsl:call-template name="xsdDateParser">
+          <xsl:with-param name="value" select="dating.date.end"/> 
+        </xsl:call-template>
+      </sdo:endDate>      
+      <sdo:startDate>
+        <xsl:call-template name="xsdDateParser">
+          <xsl:with-param name="value" select="dating.date.start"/> 
         </xsl:call-template>
       </sdo:startDate>      
     </xsl:otherwise>
