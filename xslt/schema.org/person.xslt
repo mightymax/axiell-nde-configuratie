@@ -10,7 +10,7 @@
   xmlns:sdo="https://schema.org/">
 
   <!-- set customer URL for generic.xslt, cannot be a filename -->
-  <xsl:import href="https://nde-apw.adlibhosting.com/Q623558/xslt/oai/schema.org/generic.xslt"/>
+  <xsl:import href="https://nde-apw.adlibhosting.com/Q666/xslt/schema.org/generic.xslt"/>
   <!-- set geothesau name: is thesau in 4x applications; geothesaurus in 5x -->
   <xsl:param name="geothesau">geothesaurus</xsl:param>
   

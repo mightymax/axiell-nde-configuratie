@@ -10,7 +10,8 @@
 
   <!-- Change these per client: -->
   <!-- Name of client, this must be a simplified version using only letters, numbers and '-' -->
-  <xsl:param name="customer">Q623558</xsl:param>
+  <xsl:param name="customer">Q666</xsl:param>
+  <xsl:param name="ark_naan">NAAN</xsl:param>
   <!-- Name of dataset, this must contain only letters, numbers and '-', leafe to 'dataset' if customeronly has 1 dataset/collection -->
   <xsl:param name="dataset">dataset</xsl:param>
 

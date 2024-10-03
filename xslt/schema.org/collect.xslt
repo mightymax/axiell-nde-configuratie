@@ -10,7 +10,7 @@
     xmlns:adlib="https://data.axiell.com/Axiell/vocabulary/"
     xmlns:sdo="https://schema.org/"  >
 
-  <xsl:import href="https://nde-apw.adlibhosting.com/Q1820897/xslt/oai/schema.org/generic.xslt"/>
+  <xsl:import href="https://nde-apw.adlibhosting.com/Q666/xslt/schema.org/generic.xslt"/>
   <xsl:param name="database">collection</xsl:param>
   <xsl:output method="xml" indent="yes" encoding="utf-8"/>
 

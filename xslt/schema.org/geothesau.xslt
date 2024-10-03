@@ -10,7 +10,7 @@
     xmlns:dct="http://purl.org/dc/terms/"
     xmlns:adlib="https://data.axiell.com/Axiell/vocabulary/"
 >
-  <xsl:import href="https://nde-apw.adlibhosting.com/Q623558/xslt/oai/schema.org/generic.xslt"/>
+  <xsl:import href="https://nde-apw.adlibhosting.com/Q666/xslt/schema.org/generic.xslt"/>
   <xsl:param name="database">geothesaurus</xsl:param>
   <xsl:output method="xml" indent="yes" encoding="utf-8"/>
 

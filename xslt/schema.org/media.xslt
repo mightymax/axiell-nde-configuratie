@@ -10,9 +10,9 @@
     xmlns:adlib="https://data.axiell.com/Axiell/vocabulary/"
     xmlns:sdo="https://schema.org/"  >
 
-  <xsl:import href="https://nde-apw.adlibhosting.com/Q623558/xslt/oai/schema.org/generic.xslt"/>
+  <xsl:import href="https://nde-apw.adlibhosting.com/Q666/xslt/schema.org/generic.xslt"/>
   <xsl:param name="database">media</xsl:param>
-  <xsl:param name="imageUri">https://ouk-apw.adlibhosting.com/axiellwebnde/wwwopac.ashx?command=getcontent&amp;server=images&amp;value=</xsl:param>
+  <xsl:param name="imageUri">IMAGEURL</xsl:param>
   <xsl:output method="xml" indent="yes" encoding="utf-8"/>
 
   <xsl:template match="/adlibXML">
