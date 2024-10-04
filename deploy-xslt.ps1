@@ -23,6 +23,7 @@ if (-not (Test-Path -Path $targetPath -PathType Container)) {
 Get-ChildItem "$scriptDir/xslt/schema.org" -Filter *.xslt |
 Foreach-Object {
 	$targetFile = $targetPath + "/" + $_.Name
-	(Get-Content -path $_.FullName -Raw) -replace 'Q666',$ID -replace 'NAAN',$NAAN -replace 'IMAGEURL',$IMAGEURL > $targetFile
+    Copy-Item -Path $_.FullName -Destination $targetFile
+	(Get-Content $targetFile) -replace 'Q666', $ID -replace 'NAAN' ,$NAAN -replace 'IMAGEURL', $IMAGEURL | Set-Content $targetFile
 	Write-Output $targetFile
 }
