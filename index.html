@@ -53,10 +53,10 @@
               tr.dataset.baseURL = `https://nde-apw.adlibhosting.com/${ID}/oai.ashx`
 
               let cell = document.createElement('td')
-              cell.innerHTML = `
+              cell.innerHTML = `<div style="white-space: nowrap">
                 <img style="height:24px;" class="rounded-circle" src="logos/${ID}.png" alt="">
                 <img style="height:24px;" class="rounded-circle" src="logos/${ID}-dataset.png" alt="">
-                <img style="height:24px;" class="rounded-circle" src="logos/${ID}-organisatie.png" alt="">`
+                <img style="height:24px;" class="rounded-circle" src="logos/${ID}-organisatie.png" alt=""></div>`
               tr.appendChild(cell)
 
               cell = document.createElement('td')
