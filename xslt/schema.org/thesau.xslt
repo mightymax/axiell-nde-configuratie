@@ -33,6 +33,10 @@
         | scope_note/value[@lang!='neutral'] | Source/source.number
         "/>
       </skos:Concept>
+      <xsl:call-template name="dereferencableUri">
+        <xsl:with-param name="database" select="$database" />
+        <xsl:with-param name="priref" select="@priref" />
+      </xsl:call-template>
     </rdf:RDF>
   </xsl:template>
 

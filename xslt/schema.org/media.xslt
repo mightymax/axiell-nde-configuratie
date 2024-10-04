@@ -65,6 +65,10 @@
           <xsl:with-param name="value" select="production_date[text() != '']"/>
         </xsl:call-template>
       </xsl:element>
+      <xsl:call-template name="dereferencableUri">
+        <xsl:with-param name="database" select="$database" />
+        <xsl:with-param name="priref" select="@priref" />
+      </xsl:call-template>
     </rdf:RDF>
   </xsl:template>
 

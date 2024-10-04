@@ -32,6 +32,10 @@
       <sdo:ArchiveComponent rdf:about="{$baseUri}/{$database}/{@priref}">
         <xsl:apply-templates select="*|*/*|@*"/>
       </sdo:ArchiveComponent>
+      <xsl:call-template name="dereferencableUri">
+        <xsl:with-param name="database" select="$database" />
+        <xsl:with-param name="priref" select="@priref" />
+      </xsl:call-template>
       <xsl:apply-templates select="./Dimension" mode="QuantitativeValue"/>
       <xsl:apply-templates select="./Production/creator.role.lref" mode="Role"/>
     </rdf:RDF>

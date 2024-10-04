@@ -12,11 +12,20 @@
   <!-- Name of client, this must be a simplified version using only letters, numbers and '-' -->
   <xsl:param name="customer">Q666</xsl:param>
   <xsl:param name="ark_naan">NAAN</xsl:param>
-  <!-- Name of dataset, this must contain only letters, numbers and '-', leafe to 'dataset' if customeronly has 1 dataset/collection -->
+  <!-- Name of dataset, this must contain only letters, numbers and '-', leave to 'dataset' if customeronly has 1 dataset/collection -->
   <xsl:param name="dataset">dataset</xsl:param>
 
 
-  <xsl:param name="baseUri"><xsl:value-of select="concat('https://data.axiell.com/', $customer, '/', $dataset)"/></xsl:param>
+  <xsl:param name="baseUri">
+    <xsl:choose>
+      <xsl:when test="$ark_naan = ''">
+        <xsl:value-of select="concat('https://data.axiell.com/', $customer, '/', $dataset)"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="concat('http://n2t.net/ark:/', $ark_naan)"/>
+      </xsl:otherwise>
+    </xsl:choose>      
+  </xsl:param>
   <!-- == Output =============================================== -->
   <xsl:output encoding="UTF-8" indent="yes" method="xml" media-type="application/xml" standalone="no" omit-xml-declaration="no"/>
 
@@ -68,7 +77,16 @@
     </sdo:dateCreated>
   </xsl:template>
 
-
+  <!-- Extra triple to add link to dereferencable object: -->
+  <xsl:template name="dereferencableUri">
+    <xsl:param name="database" />
+    <xsl:param name="priref" />
+    <xsl:if test="$ark_naan != ''">
+      <rdf:Description rdf:about="{$baseUri}/{$database}/{@priref}">
+        <sdo:url rdf:resource="https://data.axiell.com/{$customer}/{$dataset}/{$database}/{$priref}"/>
+      </rdf:Description>
+    </xsl:if>
+  </xsl:template>
   <xsl:template match="Title/title | record/title">
     <sdo:name>
       <xsl:value-of select="."/>

@@ -26,13 +26,17 @@
 
   <xsl:template match="record">
     <rdf:RDF>
-      <sdo:Place rdf:about="{$baseUri}/{$database}/{@priref}">
-        <xsl:apply-templates select="*|@*"/>
-      </sdo:Place>
       <xsl:apply-templates select="." mode="metadata">
         <xsl:with-param name="database" select="$database"/>
       </xsl:apply-templates>
       <xsl:apply-templates select="./term.type" mode="ConceptSchema"/>
+      <sdo:Place rdf:about="{$baseUri}/{$database}/{@priref}">
+        <xsl:apply-templates select="*|@*"/>
+      </sdo:Place>
+      <xsl:call-template name="dereferencableUri">
+        <xsl:with-param name="database" select="$database" />
+        <xsl:with-param name="priref" select="@priref" />
+      </xsl:call-template>
     </rdf:RDF>
   </xsl:template>
 

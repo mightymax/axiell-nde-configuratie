@@ -48,6 +48,10 @@
       <xsl:apply-templates select="./name.type/value[@lang='neutral']"/>
       <!-- Enrich SKOS concepts for nationalities & occupations;: -->
       <xsl:apply-templates select="./nationality.lref | ./occupation.lref" mode="enrich_skos_nationality"/>
+      <xsl:call-template name="dereferencableUri">
+        <xsl:with-param name="database" select="$database" />
+        <xsl:with-param name="priref" select="@priref" />
+      </xsl:call-template>
     </rdf:RDF>
   </xsl:template>
 
