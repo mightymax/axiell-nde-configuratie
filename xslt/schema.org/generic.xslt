@@ -85,6 +85,12 @@
       <rdf:Description rdf:about="{$baseUri}/{$database}/{@priref}">
         <sdo:url rdf:resource="https://data.axiell.com/{$customer}/{$dataset}/{$database}/{$priref}"/>
       </rdf:Description>
+      <xsl:if test="$ark_naan = '72166'">
+        <!-- TIJDELIJKE OPLOSSING !!!!! -->
+        <rdf:Description rdf:about="{$baseUri}/{$database}/{@priref}">
+          <sdo:sameAs rdf:resource="https://data.axiell.com/ark:/49254/{$database}/{$priref}"/>
+        </rdf:Description>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
   <xsl:template match="Title/title | record/title">
