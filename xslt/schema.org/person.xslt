@@ -14,7 +14,7 @@
   <!-- set geothesau name: is thesau in 4x applications; geothesaurus in 5x -->
   <xsl:param name="geothesau">geothesaurus</xsl:param>
   
-  <xsl:param name="database">persons-and-organisations</xsl:param>
+  <xsl:param name="database">persons_and_organisations</xsl:param>
   <xsl:output method="xml" indent="yes" encoding="utf-8"/>
 
   <xsl:template match="/adlibXML">

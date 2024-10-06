@@ -10,9 +10,9 @@
     xmlns:adlib="https://data.axiell.com/Axiell/vocabulary/"
     xmlns:sdo="https://schema.org/"  >
 
-  <xsl:import href="https://nde-apw.adlibhosting.com/Q666/xslt/schema.org/generic.xslt"/>
+  <xsl:import href="https://nde-apw.adlibhosting.com/Q474563/xslt/schema.org/generic.xslt"/>
   <xsl:param name="database">media</xsl:param>
-  <xsl:param name="imageUri">IMAGEURL</xsl:param>
+  <xsl:param name="imageUri">https://teylers.adlibhosting.com/ais6/Content/GetContent?command=getcontent&amp;server=images&amp;value=</xsl:param>
   <xsl:output method="xml" indent="yes" encoding="utf-8"/>
 
   <xsl:template match="/adlibXML">
@@ -91,11 +91,10 @@
   <xsl:template match="reference_number">
     <sdo:name><xsl:value-of select="."/></sdo:name>
     <sdo:thumbnailURL rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">
-      <xsl:value-of select="concat($imageUri, normalize-space(.), '&amp;width=250&amp;height=250')"/>
+      <xsl:value-of select="concat($imageUri, normalize-space(translate(., ' ', '+')), '&amp;width=250&amp;height=250')"/>
     </sdo:thumbnailURL>
     <sdo:contentUrl rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">
-      <xsl:value-of select="concat($imageUri, normalize-space(.))"/>
+      <xsl:value-of select="concat($imageUri, normalize-space(translate(., ' ', '+')))"/>
     </sdo:contentUrl>
   </xsl:template>
-
 </xsl:stylesheet>
