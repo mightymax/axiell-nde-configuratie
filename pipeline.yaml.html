@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>Axiell | CI/CD YAML generator</title>
+    </head>
+  <body class="p-2" style="height: 100vh;">
+    <button class="btn btn-primary"><i class="bi bi-clipboard"></i> copy and paste in Gitlab</button>
+    <pre><code></code></pre>
+    <textarea class="d-none"></textarea>
+  </body>
+  <script>
+    const ymlContainer = document.querySelector('code')
+    ymlContainer.addEventListener('click', (ev) => {
+      ev.preventDefault()
+      // ev.currentTarget.select()
+    })
+    document.querySelector('.btn').addEventListener('click', (ev) => {
+      const input = document.querySelector('textarea')
+      input.select()
+      input.setSelectionRange(0, 9999999)
+      navigator.clipboard.writeText(input.value);
+      const btn = ev.currentTarget
+      btn.innerHTML = `<i class="bi bi-clipboard-check"></i> copy and paste in Gitlab`
+      btn.classList.remove('btn-primary')
+      btn.classList.add('btn-success')
+      setTimeout(() => {
+        btn.innerHTML = `<i class="bi bi-clipboard"></i> copy and paste in Gitlab`
+        btn.classList.add('btn-primary')
+        btn.classList.remove('btn-success')
+        window.open('https://git.triply.cc/customers/axiell/generic-oai-pmh-customers/-/edit/main/.gitlab-ci-etl.yml')
+      }, 500)
+      
+    })
+    window.onload = () => {
+      fetch('customers.txt')
+        .then(res => res.text())
+        .then(customers => customers.split('\n').map(line => line.split(',').shift()).splice(1))
+        .then(/** @param {string[]} ids */ ids => {
+          let yml = ''
+          let sleep = 0
+          for (const id of ids) {
+            yml += `"${id}":
+  stage: run-etls
+  interruptible: true
+  allow_failure: true
+  artifacts:
+    !reference [.etl-template, artifacts]
+  rules:
+  - !reference [.etl-template, rules]
+  script:
+    - !reference [.etl-template, install]
+    - test -z $NOSLEEP && sleep ${sleep}
+    - CUSTOMER=${id} SET=collect npx etl --verbose --head $HEAD --timeout "$TIMEOUT" --log-dir logs --data-dir "/data/$CI_PROJECT_PATH_SLUG/$CI_JOB_NAME/$CI_COMMIT_REF_NAME"
+    - CUSTOMER=${id} SET=media npx etl --verbose --head $HEAD --timeout "$TIMEOUT" --log-dir logs --data-dir "/data/$CI_PROJECT_PATH_SLUG/$CI_JOB_NAME/$CI_COMMIT_REF_NAME"
+    - CUSTOMER=${id} SET=person npx etl --verbose --head $HEAD --timeout "$TIMEOUT" --log-dir logs --data-dir "/data/$CI_PROJECT_PATH_SLUG/$CI_JOB_NAME/$CI_COMMIT_REF_NAME"
+    - CUSTOMER=${id} SET=thesau npx etl --verbose --head $HEAD --timeout "$TIMEOUT" --log-dir logs --data-dir "/data/$CI_PROJECT_PATH_SLUG/$CI_JOB_NAME/$CI_COMMIT_REF_NAME"
+    - CUSTOMER=${id} node lib/addQueries.js
+
+`
+            sleep += 30
+          }
+          ymlContainer.innerHTML = yml
+          document.querySelector('textarea').innerHTML = yml
+          hljs.highlightAll()
+        })
+    }
+  </script>
+</html>
