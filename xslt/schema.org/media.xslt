@@ -10,9 +10,9 @@
     xmlns:adlib="https://data.axiell.com/Axiell/vocabulary/"
     xmlns:sdo="https://schema.org/"  >
 
-  <xsl:import href="https://nde-apw.adlibhosting.com/Q474563/xslt/schema.org/generic.xslt"/>
+  <xsl:import href="https://nde-apw.adlibhosting.com/Q666/xslt/schema.org/generic.xslt"/>
   <xsl:param name="database">media</xsl:param>
-  <xsl:param name="imageUri">https://teylers.adlibhosting.com/ais6/Content/GetContent?command=getcontent&amp;server=images&amp;value=</xsl:param>
+  <xsl:param name="imageUri">IMAGEURL</xsl:param>
   <xsl:output method="xml" indent="yes" encoding="utf-8"/>
 
   <xsl:template match="/adlibXML">
@@ -90,11 +90,32 @@
 
   <xsl:template match="reference_number">
     <sdo:name><xsl:value-of select="."/></sdo:name>
+	<xsl:variable name="formattedImageUri">
+		<xsl:choose>
+			<xsl:when test="contains($imageUri,'%data%')">
+				<xsl:value-of select="replace($imageUri, '%data%', normalize-space(.))"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat($imageUri, normalize-space(.))"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<xsl:variable name="formattedThumbUri">
+		<xsl:choose>
+			<xsl:when test="contains($imageUri,'wwwopac.ashx')">
+				<xsl:value-of select="concat($formattedImageUri, '&amp;width=250&amp;height=250')"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$formattedImageUri"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
     <sdo:thumbnailURL rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">
-      <xsl:value-of select="concat($imageUri, normalize-space(translate(., ' ', '+')), '&amp;width=250&amp;height=250')"/>
+      <xsl:value-of select="$formattedThumbUri"/>
     </sdo:thumbnailURL>
     <sdo:contentUrl rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">
-      <xsl:value-of select="concat($imageUri, normalize-space(translate(., ' ', '+')))"/>
+      <xsl:value-of select="$formattedImageUri"/>
     </sdo:contentUrl>
   </xsl:template>
+
 </xsl:stylesheet>
