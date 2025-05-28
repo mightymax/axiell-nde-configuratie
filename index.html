@@ -39,7 +39,7 @@
       window.onload = () => {
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-        fetch('customers.txt')
+        fetch('customers.txt?' + new Date().getTime(), {cache: 'no-cache'})
           .then(res => res.text())
           .then(csv => csv.split("\n")
             .filter(line => line.match(/Q\d+/))
