@@ -18,6 +18,7 @@
       </div>
       <table class="table" style="display: none;">
         <thead>
+          <th>TL</th>
           <th>Logo's</th>
           <th>Code</th>
           <th>
@@ -47,12 +48,18 @@
           .then(customers => {
             const tbody = document.querySelector('tbody')
             for (const customer of customers) {
-              const [ID, NAAN] = customer
+              const [ID, NAAN, Triply_LDMax] = customer
               const tr = document.createElement('tr')
               tr.id = ID
               tr.dataset.baseURL = `https://nde-apw.adlibhosting.com/${ID}/oai.ashx`
 
               let cell = document.createElement('td')
+              cell.innerHTML = Triply_LDMax.toUpperCase() === 'T'
+                ? '<img style="height:24px;" class="rounded-circle" src="logos/triply.svg" alt="Triply">'
+                : '<img style="height:24px;" class="rounded-circle" src="logos/ldmax.svg" alt="LDMax">'
+              tr.appendChild(cell)
+
+              cell = document.createElement('td')
               cell.innerHTML = `<div style="white-space: nowrap">
                 <img style="height:24px;" class="rounded-circle" src="logos/${ID}.png" alt="">
                 <img style="height:24px;" class="rounded-circle" src="logos/${ID}-dataset.png" alt="">
@@ -115,7 +122,7 @@
     </li>
     <!-- {WEBSITE} -->
     <li><a target="_blank" class="dropdown-item" href="https://www.wikidata.org/wiki/${ID}">WikiData</a></li>
-    <li><a target="_blank" class="dropdown-item" href="https://data.axiell.com/${ID}/dataset">Dataset Triply</a></li>
+    <li><a target="_blank" class="dropdown-item" href="${Triply_LDMax === 'T' ? `https://data.axiell.com/${ID}/dataset` : `https://www.ldmax.nl/datasets/${ID.toLowerCase()}`}">Dataset ${Triply_LDMax === 'T' ? 'Triply' : 'LDMax'}</a></li>
     <li><a target="_blank" class="dropdown-item" href="https://datasetregister.netwerkdigitaalerfgoed.nl/show.php?uri=https%3A%2F%2Fdata.axiell.com%2F${ID}%2Fdataset">NDE Datasetregister</a></li>
   </ul>
 </div>
