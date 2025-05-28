@@ -64,6 +64,9 @@
         <xsl:call-template name="dateCreated">
           <xsl:with-param name="value" select="production_date[text() != '']"/>
         </xsl:call-template>
+        <xsl:if test="$ark_naan != ''">
+          <sdo:identifier><xsl:value-of select="concat('ark:/', $ark_naan, '/', $database, '/', @priref)"/></sdo:identifier>
+        </xsl:if>
       </xsl:element>
       <xsl:call-template name="dereferencableUri">
         <xsl:with-param name="database" select="$database" />
@@ -110,9 +113,9 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-    <sdo:thumbnailURL rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">
+    <sdo:thumbnailUrl rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">
       <xsl:value-of select="$formattedThumbUri"/>
-    </sdo:thumbnailURL>
+    </sdo:thumbnailUrl>
     <sdo:contentUrl rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">
       <xsl:value-of select="$formattedImageUri"/>
     </sdo:contentUrl>

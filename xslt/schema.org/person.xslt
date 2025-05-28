@@ -14,7 +14,7 @@
   <!-- set geothesau name: is thesau in 4x applications; geothesaurus in 5x -->
   <xsl:param name="geothesau">geothesaurus</xsl:param>
   
-  <xsl:param name="database">persons_and_organisations</xsl:param>
+  <xsl:param name="database">persons-and-organisations</xsl:param>
   <xsl:output method="xml" indent="yes" encoding="utf-8"/>
 
   <xsl:template match="/adlibXML">
@@ -58,6 +58,9 @@
   
   <xsl:template match="record" mode="institutions">
     <sdo:Organization rdf:about="{$baseUri}/{$database}/{./@priref}">
+        <xsl:if test="$ark_naan != ''">
+          <sdo:identifier><xsl:value-of select="concat('ark:/', $ark_naan, '/', $database, '/', @priref)"/></sdo:identifier>
+        </xsl:if>
       <xsl:apply-templates select="name | guid | nationality.lref | occupation.lref"/>
       <xsl:apply-templates select="name.type/value[@lang='neutral'] | name.type/value[@lang='neutral'] " mode="link_to_skos_concept"/>
     </sdo:Organization>
@@ -65,6 +68,9 @@
 
   <xsl:template match="record" mode="persons">
     <sdo:Person rdf:about="{$baseUri}/{$database}/{./@priref}">
+        <xsl:if test="$ark_naan != ''">
+          <sdo:identifier><xsl:value-of select="concat('ark:/', $ark_naan, '/', $database, '/', @priref)"/></sdo:identifier>
+        </xsl:if>
       <xsl:apply-templates select="name | surname | biography | 
         birth.place.lref | death.place.lref | birth.date.start | 
         death.date.start | guid | nationality.lref | occupation.lref"/>

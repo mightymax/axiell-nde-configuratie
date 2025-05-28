@@ -5,6 +5,7 @@
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
     xmlns:adlib="https://data.axiell.com/Axiell/vocabulary/"
+	xmlns:sdo="https://schema.org/"
 >
   <xsl:import href="https://nde-apw.adlibhosting.com/Q666/xslt/schema.org/generic.xslt"/>
   <xsl:param name="database">thesaurus</xsl:param>
@@ -32,6 +33,9 @@
         | term/value[@lang!='neutral']| equivalent_term/value[@lang!='neutral']| used_for/value[@lang!='neutral']
         | scope_note/value[@lang!='neutral'] | Source/source.number
         "/>
+        <xsl:if test="$ark_naan != ''">
+          <sdo:identifier><xsl:value-of select="concat('ark:/', $ark_naan, '/', $database, '/', @priref)"/></sdo:identifier>
+        </xsl:if>
       </skos:Concept>
       <xsl:call-template name="dereferencableUri">
         <xsl:with-param name="database" select="$database" />
@@ -79,7 +83,7 @@
   </xsl:template>
 
   <xsl:template match="record/term.type">
-    <skos:inSchema rdf:resource="{$baseUri}/{$database}/{value[@lang='neutral']/text()}"/>
+    <skos:inScheme rdf:resource="{$baseUri}/{$database}/{value[@lang='neutral']/text()}"/>
   </xsl:template>
 
   <xsl:template match="record/term.type" mode="ConceptSchema">

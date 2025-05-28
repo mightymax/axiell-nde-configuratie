@@ -30,6 +30,9 @@
         <xsl:with-param name="database" select="$database"/>
       </xsl:apply-templates>
       <sdo:ArchiveComponent rdf:about="{$baseUri}/{$database}/{@priref}">
+      <xsl:if test="$ark_naan != ''">
+        <sdo:identifier><xsl:value-of select="concat('ark:/', $ark_naan, '/', $database, '/', @priref)"/></sdo:identifier>
+      </xsl:if>
         <xsl:apply-templates select="*|*/*|@*"/>
       </sdo:ArchiveComponent>
       <xsl:call-template name="dereferencableUri">
@@ -82,7 +85,7 @@
   </xsl:template>
 
   <xsl:template match="Dimension" mode="QuantitativeValue">
-    <sdo:QuantitativeValue rdf:about="{$baseUri}/{$database}/{../@priref}/dimension/{position()}">
+    <sdo:QuantitativeValue rdf:about="{$baseUri}/{$database}/{../@priref}#/dimension/{position()}">
       <sdo:additionalType rdf:resource="{$baseUri}/thesaurus/{dimension.type.lref}" />
       <sdo:name><xsl:value-of select="dimension.type"/></sdo:name>
       <sdo:unitText><xsl:value-of select="dimension.unit"/></sdo:unitText>
@@ -96,12 +99,12 @@
       <xsl:apply-templates select="dimension.precision/value[@lang!='neutral']"/>
     </sdo:QuantitativeValue>
     <rdf:Description rdf:about="{$baseUri}/{$database}/{../@priref}">
-      <sdo:size rdf:resource="{$baseUri}/{$database}/{../@priref}/dimension/{position()}" />
+      <sdo:size rdf:resource="{$baseUri}/{$database}/{../@priref}#/dimension/{position()}" />
     </rdf:Description>
   </xsl:template>
 
   <xsl:template match="Production/creator.role.lref" mode="Role">
-    <sdo:Role rdf:about="{$baseUri}/{$database}/{../../@priref}/role/{position()}">
+    <sdo:Role rdf:about="{$baseUri}/{$database}/{../../@priref}#/role/{position()}">
       <sdo:roleName><xsl:value-of select="../creator.role"/></sdo:roleName>
       <sdo:additionalType rdf:resource="{$baseUri}/thesaurus/{.}" />
       <sdo:about rdf:resource="{$baseUri}/{$database}/{../../@priref}"/>
@@ -182,7 +185,7 @@
     | Content_subject/content.subject.lref
     | Content_person/content.person.name.lref
   ">
-    <dc:subject rdf:resource="{$baseUri}/thesaurus/{.}"/>
+    <sdo:keywords rdf:resource="{$baseUri}/thesaurus/{.}"/>
   </xsl:template>
   
 </xsl:stylesheet>
