@@ -48,13 +48,14 @@
           .then(customers => {
             const tbody = document.querySelector('tbody')
             for (const customer of customers) {
-              const [ID, NAAN, Triply_LDMax] = customer
+              const [ID, NAAN, Triply_LDMax_raw] = customer
+			  const Triply_LDMax = Triply_LDMax_raw.trim().toUpperCase()
               const tr = document.createElement('tr')
               tr.id = ID
               tr.dataset.baseURL = `https://nde-apw.adlibhosting.com/${ID}/oai.ashx`
 
               let cell = document.createElement('td')
-              cell.innerHTML = Triply_LDMax.toUpperCase() === 'T'
+              cell.innerHTML = Triply_LDMax === 'T'
                 ? '<img style="height:24px;" class="rounded-circle" src="logos/triply.svg" alt="Triply">'
                 : '<img style="height:24px;" class="rounded-circle" src="logos/ldmax.svg" alt="LDMax">'
               tr.appendChild(cell)
