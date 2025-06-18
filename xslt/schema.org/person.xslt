@@ -11,8 +11,6 @@
   
   <!-- set customer URL for generic.xslt, cannot be a filename -->
   <xsl:import href="https://nde-apw.adlibhosting.com/Q666/xslt/schema.org/generic.xslt"/>
-  <!-- set geothesau name: is thesau in 4x applications; geothesaurus in 5x -->
-  <xsl:param name="geothesau">geothesaurus</xsl:param>
   
   <xsl:param name="database">persons-and-organisations</xsl:param>
   <xsl:output method="xml" indent="yes" encoding="utf-8"/>
@@ -61,7 +59,7 @@
   
   <xsl:template match="record" mode="institutions">
     <xsl:param name="id"/>
-    <sdo:Organization rdf:about="{$baseUri}/{$database}/{$id}">
+    <sdo:Organization rdf:about="{$baseUri}/{$id}">
       <xsl:apply-templates select="." mode="metadata">
         <xsl:with-param name="database" select="$database"/>
         <xsl:with-param name="id" select="$id"/>
@@ -76,7 +74,7 @@
       <xsl:value-of select="guid"/>
       <xsl:value-of select="priref[not(../guid!='')]"/>
     </xsl:variable>
-    <sdo:Person rdf:about="{$baseUri}/{$database}/{$id}">
+    <sdo:Person rdf:about="{$baseUri}/{$id}">
       <xsl:apply-templates select="." mode="metadata">
         <xsl:with-param name="database" select="$database"/>
         <xsl:with-param name="id" select="$id"/>
@@ -125,11 +123,11 @@
       <xsl:attribute name="rdf:about">
         <xsl:value-of select="$baseUri"/>
         <xsl:text>/thesaurus</xsl:text>
-        <xsl:value-of select="../guid"/>
         <xsl:text>/</xsl:text>
+        <xsl:value-of select="../guid"/>
         <xsl:value-of select=".[not(../guid!='')]"/>
       </xsl:attribute>
-      <sdo:name><xsl:value-of select="."/></sdo:name>
+      <sdo:name><xsl:value-of select="../name"/></sdo:name>
     </sdo:Country>
   </xsl:template>
   
@@ -138,11 +136,11 @@
       <xsl:attribute name="rdf:about">
         <xsl:value-of select="$baseUri"/>
         <xsl:text>/thesaurus</xsl:text>
-        <xsl:value-of select="../guid"/>
         <xsl:text>/</xsl:text>
+        <xsl:value-of select="../guid"/>
         <xsl:value-of select=".[not(../guid!='')]"/>
       </xsl:attribute>
-      <sdo:name><xsl:value-of select="../occupation"/></sdo:name>
+      <sdo:name><xsl:value-of select="../name"/></sdo:name>
     </sdo:Occupation>
   </xsl:template>
   

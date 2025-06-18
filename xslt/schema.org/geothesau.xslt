@@ -11,7 +11,7 @@
                 xmlns:adlib="https://data.axiell.com/Axiell/vocabulary#"
   >
   <xsl:import href="https://nde-apw.adlibhosting.com/Q666/xslt/schema.org/generic.xslt"/>
-  <xsl:param name="database">geothesaurus</xsl:param>
+  <xsl:param name="database">geothesau</xsl:param>
   <xsl:output method="xml" indent="yes" encoding="utf-8"/>
   
   <xsl:template match="/adlibXML">

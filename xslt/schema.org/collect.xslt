@@ -33,6 +33,7 @@
       <sdo:ArchiveComponent rdf:about="{$baseUri}/{$id}">
         <xsl:apply-templates select="." mode="metadata">
           <xsl:with-param name="id" select="$id"/>
+          <xsl:with-param name="database" select="$database"/>
         </xsl:apply-templates>
         <xsl:apply-templates select="*|*/*|*/*/*|@*"/>
       </sdo:ArchiveComponent>
@@ -124,10 +125,9 @@
   <xsl:template match="Dimension" mode="QuantitativeValue">
     <xsl:param name="id"/>
     <rdf:Description rdf:about="{$baseUri}/{$id}">
-      <sdo:size rdf:nodeID="dimension_{$id}_{position()}" />
+      <sdo:size rdf:resource="{$baseUri}/{$id}#dimension-{position()}" />
     </rdf:Description>
-    <rdf:Description rdf:nodeID="dimension_{$id}_{position()}">
-      <rdf:type rdf:resource="https://schema.org/QuantitativeValue" />
+    <sdo:QuantitativeValue rdf:about="{$baseUri}/{$id}#dimension-{position()}">
       <sdo:additionalType>
         <xsl:attribute name="rdf:resource">
           <xsl:value-of select="$baseUri"/>
@@ -140,12 +140,16 @@
         </xsl:attribute>
       </sdo:additionalType>
       
-      <sdo:name>
-        <xsl:value-of select="dimension.type/term"/>
-      </sdo:name>
-      <sdo:unitText>
-        <xsl:value-of select="dimension.unit/term"/>
-      </sdo:unitText>
+      <xsl:if test="dimension.type/term/text()!=''">
+        <sdo:name>
+          <xsl:value-of select="dimension.type/term"/>
+        </sdo:name>
+      </xsl:if>
+      <xsl:if test="dimension.unit/term/text()!=''">
+        <sdo:unitText>
+          <xsl:value-of select="dimension.unit/term"/>
+        </sdo:unitText>
+      </xsl:if>
       <sdo:unitCode>
         <xsl:attribute name="rdf:resource">
           <xsl:value-of select="$baseUri"/>
@@ -168,7 +172,7 @@
         </sdo:description>
       </xsl:if>
       <xsl:apply-templates select="dimension.precision/value[@lang!='neutral']"/>
-    </rdf:Description>
+    </sdo:QuantitativeValue>
   </xsl:template>
   
   <xsl:template match="current_location.name/guid|dimension.type/guid|dimension.unit/guid|creator.role/guid"/>
@@ -176,9 +180,9 @@
   <xsl:template match="Production/creator.role.lref[.!='']" mode="Role">
     <xsl:param name="id"/>
     <rdf:Description rdf:about="{$baseUri}/{$id}">
-      <sdo:size rdf:nodeID="role_{$id}_{position()}" />
+      <sdo:role rdf:resource="{$baseUri}/{$id}#role-{position()}" />
     </rdf:Description>
-    <rdf:Description rdf:nodeID="role_{$id}_{position()}">
+    <sdo:Role rdf:about="{$baseUri}/{$id}#role-{position()}">
       <sdo:roleName>
         <xsl:value-of select="../creator.role/term"/>
       </sdo:roleName>
@@ -204,7 +208,7 @@
           <xsl:value-of select="../creator.lref[not(../creator/guid!='')]"/>
         </xsl:attribute>
       </sdo:subject>
-    </rdf:Description>
+    </sdo:Role>
   </xsl:template>
   
   <!-- 4.x -->

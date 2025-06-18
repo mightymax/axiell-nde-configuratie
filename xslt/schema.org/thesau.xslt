@@ -31,11 +31,12 @@
       <skos:Concept rdf:about="{$baseUri}/{$id}">
         <xsl:apply-templates select="." mode="metadata">
           <xsl:with-param name="id" select="$id"/>
+          <xsl:with-param name="database" select="$database"/>
         </xsl:apply-templates>
         <xsl:apply-templates select="./@created | ./@modification | term.type| term | equivalent_term |
           used_for | scope_note | broader_term | narrower_term | related_term | equivalent_term | guid
           | term/value[@lang!='neutral']| equivalent_term/value[@lang!='neutral']| used_for/value[@lang!='neutral']
-          | scope_note/value[@lang!='neutral'] | Source/source.number
+          | scope_note/value[@lang!='neutral'] | Source/source.number | PIDother
                               "/>
       </skos:Concept>
       <xsl:apply-templates select="." mode="metadata_identifier_links">
@@ -123,6 +124,12 @@
   
   <xsl:template match="Source/source.number">
     <skos:exactMatch  rdf:resource="{.}"/>
+  </xsl:template>
+  
+  <xsl:template match="PIDother">
+    <xsl:if test="normalize-space(./PID_other.URI) != ''">
+      <skos:exactMatch rdf:resource="{./PID_other.URI}" />
+    </xsl:if>
   </xsl:template>
   
   <xsl:template match="value[@lang='neutral']">

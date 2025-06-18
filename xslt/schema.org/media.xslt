@@ -12,7 +12,7 @@
   
   <xsl:import href="https://nde-apw.adlibhosting.com/Q666/xslt/schema.org/generic.xslt"/>
   <xsl:param name="database">media</xsl:param>
-  <xsl:param name="imageUri">https://epg.adlibhosting.com/axiellimageapi/wwwopac.ashx?command=getcontent&amp;server=EPG-Zoutkamp&amp;value=</xsl:param>
+  <xsl:param name="imageUri">IMAGEURL</xsl:param>
   <xsl:output method="xml" indent="yes" encoding="utf-8"/>
   
   <xsl:template match="/adlibXML">
@@ -60,6 +60,7 @@
         <xsl:attribute name="rdf:about"><xsl:value-of select="concat($baseUri, '/', $id)" /></xsl:attribute>
         <xsl:apply-templates select="." mode="metadata">
           <xsl:with-param name="id" select="$id"/>
+          <xsl:with-param name="database" select="$database"/>
         </xsl:apply-templates>
         <xsl:apply-templates select="*|@*"/>
         <xsl:call-template name="dateCreated">

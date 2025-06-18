@@ -14,8 +14,7 @@
   <xsl:param name="ark_naan">NAAN</xsl:param>
   <!-- Name of dataset, this must contain only letters, numbers and '-', leave to 'dataset' if customeronly has 1 dataset/collection -->
   <xsl:param name="dataset">dataset</xsl:param>
-  
-  
+   
   <xsl:param name="baseIdentifier">
     <xsl:choose>
       <xsl:when test="$ark_naan = ''">
@@ -41,6 +40,7 @@
   
   <xsl:template match="record" mode="metadata">
     <xsl:param name="id" />
+    <xsl:param name="database" />
     <dct:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"><xsl:value-of select="@created"/></dct:created>
     <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"><xsl:value-of select="@created"/></dct:modified>
     <xsl:if test="@selected='true'">
@@ -49,9 +49,10 @@
     <xsl:if test="@deleted='true'">
       <adlib:deleted rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"><xsl:value-of select="@selected"/></adlib:deleted>
     </xsl:if>
-    <sdo:identifier rdf:nodeID="PRIREF{$id}"/>
+    <sdo:identifier rdf:resource="{$baseUri}/{$id}#axiell-priref"/>
     <xsl:if test="$ark_naan != ''">
-      <sdo:identifier rdf:nodeID="ARK{$id}"/>
+      <sdo:identifier rdf:resource="{$baseUri}/{id}#NAAN"/>
+      <sdo:sameAs rdf:resource="{$baseUri}/{$database}/{./priref}" />
     </xsl:if>
   </xsl:template>
   <xsl:template match="record" mode="metadata_identifier_links">
@@ -59,22 +60,20 @@
     <xsl:param name="database" />
     <!-- ARK identifier: -->
     <xsl:if test="$ark_naan != ''">
-      <rdf:Description rdf:nodeID="ARK{$id}">
-        <rdf:type rdf:resource="https://schema.org/PropertyValue"/>
-        <sdo:additionalType rdf:resource="https://www.wikidata.org/wiki/Q2860403"/>
+      <sdo:PropertyValue rdf:about="{$baseUri}/{$id}#NAAN">
+        <sdo:additionalType rdf:resource="https://www.wikidata.org/wiki/Property:P1870"/>
         <sdo:value>
           <xsl:value-of select="concat($baseIdentifier, $id)"/>
         </sdo:value>
-      </rdf:Description>
+      </sdo:PropertyValue>
     </xsl:if>
     <!-- Axiell Priref -->
-    <rdf:Description rdf:nodeID="PRIREF{$id}">
-      <rdf:type rdf:resource="https://schema.org/PropertyValue"/>
+    <sdo:PropertyValue rdf:about="{$baseUri}/{$id}#Priref">
       <sdo:additionalType rdf:resource="https://data.axiell.com/vocabulary#Priref"/>
       <sdo:value>
         <xsl:value-of select="concat($database, ':', priref)"/>
       </sdo:value>
-    </rdf:Description>
+    </sdo:PropertyValue>
   </xsl:template>
   
   <!-- does not exist in 4.5 -->
