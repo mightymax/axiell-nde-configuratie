@@ -14,7 +14,7 @@
   <xsl:param name="ark_naan">NAAN</xsl:param>
   <!-- Name of dataset, this must contain only letters, numbers and '-', leave to 'dataset' if customeronly has 1 dataset/collection -->
   <xsl:param name="dataset">dataset</xsl:param>
-   
+  
   <xsl:param name="baseIdentifier">
     <xsl:choose>
       <xsl:when test="$ark_naan = ''">
@@ -51,7 +51,7 @@
     </xsl:if>
     <sdo:identifier rdf:resource="{$baseUri}/{$id}#axiell-priref"/>
     <xsl:if test="$ark_naan != ''">
-      <sdo:identifier rdf:resource="{$baseUri}/{id}#NAAN"/>
+      <sdo:identifier rdf:resource="{$baseUri}/{id}#ark-naan"/>
       <sdo:sameAs rdf:resource="{$baseUri}/{$database}/{./priref}" />
     </xsl:if>
   </xsl:template>
@@ -60,7 +60,7 @@
     <xsl:param name="database" />
     <!-- ARK identifier: -->
     <xsl:if test="$ark_naan != ''">
-      <sdo:PropertyValue rdf:about="{$baseUri}/{$id}#NAAN">
+      <sdo:PropertyValue rdf:about="{$baseUri}/{$id}#ark-naan">
         <sdo:additionalType rdf:resource="https://www.wikidata.org/wiki/Property:P1870"/>
         <sdo:value>
           <xsl:value-of select="concat($baseIdentifier, $id)"/>
@@ -68,7 +68,7 @@
       </sdo:PropertyValue>
     </xsl:if>
     <!-- Axiell Priref -->
-    <sdo:PropertyValue rdf:about="{$baseUri}/{$id}#Priref">
+    <sdo:PropertyValue rdf:about="{$baseUri}/{$id}#axiell-priref">
       <sdo:additionalType rdf:resource="https://data.axiell.com/vocabulary#Priref"/>
       <sdo:value>
         <xsl:value-of select="concat($database, ':', priref)"/>
@@ -77,9 +77,6 @@
   </xsl:template>
   
   <!-- does not exist in 4.5 -->
-  <xsl:template match="guid">
-    <sdo:identifier><xsl:value-of select="."/></sdo:identifier>
-  </xsl:template>
   
   <xsl:template name="xsdDateParser">
     <xsl:param name="value"/>

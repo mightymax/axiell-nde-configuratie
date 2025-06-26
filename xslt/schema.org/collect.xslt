@@ -41,6 +41,9 @@
         <xsl:with-param name="id" select="$id"/>
         <xsl:with-param name="database" select="$database"/>
       </xsl:apply-templates>
+      <xsl:apply-templates select="PIDwork/PID_work_URI" mode="PID">
+        <xsl:with-param name="id" select="$id"/>
+      </xsl:apply-templates>
       
       <xsl:apply-templates select="./Dimension" mode="QuantitativeValue">
         <xsl:with-param name="id" select="$id"/>
@@ -177,6 +180,20 @@
   
   <xsl:template match="current_location.name/guid|dimension.type/guid|dimension.unit/guid|creator.role/guid"/>
   
+  <xsl:template match="Associated_period/association.period/guid">
+    <sdo:temporalCoverage rdf:resource="{$baseUri}/{.}" />
+  </xsl:template>
+  
+  <xsl:template match="Associated_period/association.period.date.start">
+    <sdo:temporalCoverage>
+      <xsl:value-of select="."/>
+      <xsl:if test="../association.period.date.end/text() and ./text() != ../association.period.date.end/text()">
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="../association.period.date.end"/>
+      </xsl:if>
+    </sdo:temporalCoverage>
+  </xsl:template>
+  
   <xsl:template match="Production/creator.role.lref[.!='']" mode="Role">
     <xsl:param name="id"/>
     <rdf:Description rdf:about="{$baseUri}/{$id}">
@@ -276,25 +293,34 @@
     </sdo:copyrightNotice>
   </xsl:template>
   
+  <xsl:template match="PIDwork/PID_work_URI" mode="PID">
+    <xsl:param name="id"/>
+    <sdo:PropertyValue rdf:about="{$baseUri}/{$id}#PID-{position()}">
+      <sdo:additionalType rdf:resource="https://www.wikidata.org/wiki/Q420330"/>
+      <sdo:value rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">
+        <xsl:value-of select="."/>
+      </sdo:value>
+      <sdo:about rdf:resource="{$baseUri}/{$id}"/>
+    </sdo:PropertyValue>
+  </xsl:template>
+  
   <xsl:template match="Rights/rights.holder.lref">
     <sdo:copyrightHolder rdf:resource="{$baseUri}/persons-and-organisations/{.}"/>
   </xsl:template>
+  <xsl:template match="Rights/association.geographical_keyword/guid">
+    <sdo:copyrightHolder rdf:resource="{$baseUri}/{.}"/>
+  </xsl:template>
   
   <xsl:template match="
-    Associated_person/association.person.lref 
-    | Associated_subject/association.subject.lref
-    | Content_subject/content.subject.lref
-    | Content_person/content.person.name.lref
+    Associated_person/association.person/guid
+    | Associated_subject/association.subject/guid
+    | Content_subject/content.subject/guid
+    | Content_person/content.person.name/guid
                   ">
     <sdo:keywords>
       <xsl:attribute name="rdf:resource">
         <xsl:value-of select="$baseUri"/>
-        <xsl:if test="not(../guid)">
-          <xsl:text>/thesaurus</xsl:text>
-        </xsl:if>
-        <xsl:text>/</xsl:text>
-        <xsl:value-of select="../guid"/>
-        <xsl:value-of select=".[not(../guid!='')]"/>
+        <xsl:value-of select="."/>
       </xsl:attribute>
     </sdo:keywords>
   </xsl:template>
