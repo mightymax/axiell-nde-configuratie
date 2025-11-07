@@ -42,7 +42,7 @@
     <xsl:param name="id" />
     <xsl:param name="database" />
     <dct:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"><xsl:value-of select="@created"/></dct:created>
-    <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"><xsl:value-of select="@created"/></dct:modified>
+    <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"><xsl:value-of select="@modification"/></dct:modified>
     <xsl:if test="@selected='true'">
       <adlib:selected rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"><xsl:value-of select="@selected"/></adlib:selected>
     </xsl:if>
@@ -50,10 +50,6 @@
       <adlib:deleted rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"><xsl:value-of select="@selected"/></adlib:deleted>
     </xsl:if>
     <sdo:identifier rdf:resource="{$baseUri}/{$id}#axiell-priref"/>
-    <xsl:if test="$ark_naan != ''">
-      <sdo:identifier rdf:resource="{$baseUri}/{id}#ark-naan"/>
-      <sdo:sameAs rdf:resource="{$baseUri}/{$database}/{./priref}" />
-    </xsl:if>
   </xsl:template>
   <xsl:template match="record" mode="metadata_identifier_links">
     <xsl:param name="id" />
@@ -114,7 +110,7 @@
     </sdo:name>
   </xsl:template>
   
-  <xsl:template match="Description/description | record/description">
+  <xsl:template match="Description/description | record/description | record/related_material.free_text">
     <sdo:description><xsl:value-of select="."/></sdo:description>
   </xsl:template>
   

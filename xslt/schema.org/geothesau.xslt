@@ -27,6 +27,9 @@
   <xsl:template match="record">
     <xsl:variable name="id">
       <xsl:value-of select="guid"/>
+      <xsl:if test="priref[not(../guid!='')]">
+        <xsl:value-of select="$database"/><xsl:text>/</xsl:text>
+      </xsl:if>
       <xsl:value-of select="priref[not(../guid!='')]"/>
     </xsl:variable>
     <rdf:RDF>

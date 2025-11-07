@@ -28,6 +28,9 @@
   <xsl:template match="record">
     <xsl:variable name="id">
       <xsl:value-of select="guid"/>
+      <xsl:if test="priref[not(../guid!='')]">
+        <xsl:value-of select="$database"/><xsl:text>/</xsl:text>
+      </xsl:if>
       <xsl:value-of select="priref[not(../guid!='')]"/>
     </xsl:variable>
     <rdf:RDF>
@@ -102,6 +105,12 @@
   
   <xsl:template match="reference_number">
     <sdo:name><xsl:value-of select="."/></sdo:name>
+    <xsl:variable name="iiifURL">
+      <xsl:text>https://ndeiiif.adlibhosting.com/iiif/3/</xsl:text>
+      <xsl:value-of select="$customer"/>
+      <xsl:text>%2F</xsl:text>
+      <xsl:value-of select="replace(replace(., '\\', '/'), '/', '%2F')" />
+    </xsl:variable>
     <xsl:variable name="formattedImageUri">
       <xsl:choose>
         <xsl:when test="contains($imageUri,'%data%')">
@@ -122,11 +131,21 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <!-- <sdo:thumbnailUrl rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">
+         <xsl:value-of select="$formattedThumbUri"/>
+         </sdo:thumbnailUrl>
+         <sdo:contentUrl rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">
+         <xsl:value-of select="$formattedImageUri"/>
+         </sdo:contentUrl> -->
+    
+    <!-- Tijdelijke oplossing, de IIIF URL's kloppen niet als er sumbappen gebruikt worden. -->
     <sdo:thumbnailUrl rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">
-      <xsl:value-of select="$formattedThumbUri"/>
+      <xsl:value-of select="$iiifURL"/>
+      <xsl:text>/full/250,/0/default.jpg</xsl:text>
     </sdo:thumbnailUrl>
     <sdo:contentUrl rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">
-      <xsl:value-of select="$formattedImageUri"/>
+      <xsl:value-of select="$iiifURL"/>
+      <xsl:text>/full/max/0/default.jpg</xsl:text>
     </sdo:contentUrl>
   </xsl:template>
   

@@ -8,7 +8,7 @@
                 xmlns:sdo="https://schema.org/"
   >
   <xsl:import href="https://nde-apw.adlibhosting.com/Q666/xslt/schema.org/generic.xslt"/>
-  <xsl:param name="database">thesaurus</xsl:param>
+  <xsl:param name="database">thesau</xsl:param>
   <xsl:output method="xml" indent="yes" encoding="utf-8"/>
   
   <xsl:template match="/adlibXML">
@@ -24,6 +24,9 @@
   <xsl:template match="record">
     <xsl:variable name="id">
       <xsl:value-of select="guid"/>
+      <xsl:if test="priref[not(../guid!='')]">
+        <xsl:value-of select="$database"/><xsl:text>/</xsl:text>
+      </xsl:if>
       <xsl:value-of select="priref[not(../guid!='')]"/>
     </xsl:variable>
     <rdf:RDF>
@@ -34,7 +37,7 @@
           <xsl:with-param name="database" select="$database"/>
         </xsl:apply-templates>
         <xsl:apply-templates select="./@created | ./@modification | term.type| term | equivalent_term |
-          used_for | scope_note | broader_term | narrower_term | related_term | equivalent_term | guid
+          used_for | scope_note | broader_term/term | narrower_term/term | related_term/term | equivalent_term/term | guid
           | term/value[@lang!='neutral']| equivalent_term/value[@lang!='neutral']| used_for/value[@lang!='neutral']
           | scope_note/value[@lang!='neutral'] | Source/source.number | PIDother
                               "/>
@@ -54,7 +57,7 @@
     </skos:prefLabel>
   </xsl:template>
   
-  <xsl:template match="equivalent_term | equivalent_term/value">
+  <xsl:template match="equivalent_term/term | equivalent_term/value">
     <skos:altLabel>
       <xsl:apply-templates select="@lang"/>
       <xsl:if test="not(@lang!='')"><xsl:attribute name="xml:lang" select="'nl'"/></xsl:if>
@@ -129,6 +132,9 @@
   <xsl:template match="PIDother">
     <xsl:if test="normalize-space(./PID_other.URI) != ''">
       <skos:exactMatch rdf:resource="{./PID_other.URI}" />
+    </xsl:if>
+    <xsl:if test="normalize-space(./PID_other_URI) != ''">
+      <skos:exactMatch rdf:resource="{./PID_other_URI}" />
     </xsl:if>
   </xsl:template>
   

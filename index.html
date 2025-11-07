@@ -36,6 +36,22 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script>
+      function checkNaanDomain(naan) {
+        fetch(`https://arks.org/ark:${naan}`)
+          .catch(() => alert(`Kon informatie van NAAN ${naan} niet ophalen bij Ark!`))
+          .then(r => r.json())
+          .then(arkResponse => {
+            try {
+              const target = arkResponse.definition.target
+              const url = new URL(target)
+              const popup = window.open('https://mxtoolbox.com/SuperTool.aspx?run=toolpage&action=' + url.host)
+              if(!popup) alert('Let op: je browser blokeert de popup met het resultaat van de DNS check!\n' + 'https://mxtoolbox.com/SuperTool.aspx?run=toolpage&action=' + url.host)
+              console.log(popup)
+            } catch(e) {
+              alert(e.message)
+            }
+          })
+      }
       window.onload = () => {
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
@@ -72,7 +88,7 @@
               tr.appendChild(cell)
 
               cell = document.createElement('td')
-              cell.innerHTML = NAAN.trim() ==='' ? '-' : `<a href="https://arks.org/ark:${NAAN.trim()}">${NAAN}</a>`
+              cell.innerHTML = NAAN.trim() ==='' ? '-' : `<a target="_blank" href="https://arks.org/ark:${NAAN.trim()}">${NAAN}</a>`
               tr.appendChild(cell)
 
               cell = document.createElement('td')
@@ -125,6 +141,8 @@
     <li><a target="_blank" class="dropdown-item" href="https://www.wikidata.org/wiki/${ID}">WikiData</a></li>
     <li><a target="_blank" class="dropdown-item" href="${Triply_LDMax === 'T' ? `https://data.axiell.com/${ID}/dataset` : `https://www.ldmax.nl/datasets/${ID.toLowerCase()}`}">Dataset ${Triply_LDMax === 'T' ? 'Triply' : 'LDMax'}</a></li>
     <li><a target="_blank" class="dropdown-item" href="https://datasetregister.netwerkdigitaalerfgoed.nl/show.php?uri=https%3A%2F%2Fdata.axiell.com%2F${ID}%2Fdataset">NDE Datasetregister</a></li>
+    <li><a target="_blank" class="dropdown-item" href="#" onclick="checkNaanDomain(${NAAN.trim()}); return false;">Check DNS</a></li>
+
   </ul>
 </div>
               `

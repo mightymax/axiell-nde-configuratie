@@ -11,7 +11,7 @@
                 xmlns:sdo="https://schema.org/">
   
   <xsl:import href="https://nde-apw.adlibhosting.com/Q666/xslt/schema.org/generic.xslt"/>
-  <xsl:param name="database">collection</xsl:param>
+  <xsl:param name="database">collect</xsl:param>
   <xsl:output method="xml" indent="yes" encoding="utf-8"/>
   
   <xsl:template match="/adlibXML">
@@ -27,6 +27,9 @@
   <xsl:template match="record">
     <xsl:variable name="id">
       <xsl:value-of select="guid"/>
+      <xsl:if test="priref[not(../guid!='')]">
+        <xsl:value-of select="$database"/><xsl:text>/</xsl:text>
+      </xsl:if>
       <xsl:value-of select="priref[not(../guid!='')]"/>
     </xsl:variable>
     <rdf:RDF>
@@ -67,6 +70,22 @@
   <!--   <xsl:template match="current_location.name/guid">
        <sdo:itemLocation rdf:resource="{$baseUri}/{.}"/>
        </xsl:template> -->
+  <xsl:template match="part_of_reference/guid" mode="#default">
+    <sdo:isPartOf rdf:resource="{$baseUri}/{.}"/>
+  </xsl:template>       
+  
+  <xsl:template match="parts_reference/guid" mode="#default">
+    <sdo:hasPart rdf:resource="{$baseUri}/{.}"/>
+  </xsl:template>       
+  
+  <xsl:template match="object_number" mode="#default">
+    <sdo:identifier><xsl:value-of select="."/></sdo:identifier>
+  </xsl:template>       
+  
+  <xsl:template match="current_location.name" mode="#default">
+    <sdo:itemLocation><xsl:value-of select="."/></sdo:itemLocation>
+  </xsl:template>       
+  
   <xsl:template match="institution.name/guid">
     <sdo:holdingArchive rdf:resource="{$baseUri}/{.}"/>
   </xsl:template>
@@ -114,7 +133,7 @@
   </xsl:template>
   <!-- 4.x -->
   <xsl:template match="Production/production.place.lref[not(../production.place/guid!='')]">
-    <sdo:locationCreated rdf:resource="{$baseUri}/thesaurus/{.}" />
+    <sdo:locationCreated rdf:resource="{$baseUri}/geothesaurus/{.}" />
   </xsl:template>
   <xsl:template match="Production/production.place/guid">
     <sdo:locationCreated rdf:resource="{$baseUri}/{.}" />
@@ -258,24 +277,52 @@
   <xsl:template match="Dating">
     <!-- What kind of data is this? -->
     <xsl:choose>
-      <xsl:when test="dating.date.end and dating.date.end = dating.date.start">
+      <!-- let op: dit is nu nooit meer het geval door de ___ ! -->
+      <xsl:when test="dating.date.end and dating.date.end = dating.date.start___">
         <sdo:temporal>
-          <xsl:call-template name="xsdDateParser">
-            <xsl:with-param name="value" select="dating.date.end"/>
-          </xsl:call-template>
+          <xsl:choose>
+            <xsl:when test="dating.date.end != ''">
+              <xsl:value-of select="dating.date.end"/>
+              <xsl:text> </xsl:text>
+              <xsl:value-of select="dating.date.end"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:call-template name="xsdDateParser">
+                <xsl:with-param name="value" select="dating.date.end"/>
+              </xsl:call-template>
+            </xsl:otherwise>
+          </xsl:choose>
         </sdo:temporal>
       </xsl:when>
       <xsl:otherwise>
         <!-- This is semantically incorrect! -->
         <sdo:endDate>
-          <xsl:call-template name="xsdDateParser">
-            <xsl:with-param name="value" select="dating.date.end"/>
-          </xsl:call-template>
+          <xsl:choose>
+            <xsl:when test="dating.date.end.prec != ''">
+              <xsl:value-of select="dating.date.end.prec"/>
+              <xsl:text> </xsl:text>
+              <xsl:value-of select="dating.date.end"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:call-template name="xsdDateParser">
+                <xsl:with-param name="value" select="dating.date.end"/>
+              </xsl:call-template>
+            </xsl:otherwise>
+          </xsl:choose>
         </sdo:endDate>
         <sdo:startDate>
-          <xsl:call-template name="xsdDateParser">
-            <xsl:with-param name="value" select="dating.date.start"/>
-          </xsl:call-template>
+          <xsl:choose>
+            <xsl:when test="dating.date.start.prec != ''">
+              <xsl:value-of select="dating.date.start.prec"/>
+              <xsl:text> </xsl:text>
+              <xsl:value-of select="dating.date.start"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:call-template name="xsdDateParser">
+                <xsl:with-param name="value" select="dating.date.start"/>
+              </xsl:call-template>
+            </xsl:otherwise>
+          </xsl:choose>
         </sdo:startDate>
       </xsl:otherwise>
     </xsl:choose>

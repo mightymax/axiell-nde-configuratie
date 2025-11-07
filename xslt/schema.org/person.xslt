@@ -12,7 +12,7 @@
   <!-- set customer URL for generic.xslt, cannot be a filename -->
   <xsl:import href="https://nde-apw.adlibhosting.com/Q666/xslt/schema.org/generic.xslt"/>
   
-  <xsl:param name="database">persons-and-organisations</xsl:param>
+  <xsl:param name="database">person</xsl:param>
   <xsl:output method="xml" indent="yes" encoding="utf-8"/>
   
   <xsl:template match="/adlibXML">
@@ -28,6 +28,9 @@
   <xsl:template match="record">
     <xsl:variable name="id">
       <xsl:value-of select="guid"/>
+      <xsl:if test="priref[not(../guid!='')]">
+        <xsl:value-of select="$database"/><xsl:text>/</xsl:text>
+      </xsl:if>
       <xsl:value-of select="priref[not(../guid!='')]"/>
     </xsl:variable>
     <rdf:RDF>
@@ -40,9 +43,7 @@
         </xsl:when>
         <xsl:otherwise>
           <!-- This is to be discussed: how to see if this is a person or a institution? -->
-          <xsl:apply-templates select="." mode="institutions">
-            <xsl:with-param name="id" select="$id"/>
-          </xsl:apply-templates>
+          <xsl:apply-templates select="." mode="institutions" />
         </xsl:otherwise>
       </xsl:choose>
       <xsl:apply-templates select="." mode="metadata_identifier_links">
@@ -58,13 +59,19 @@
   
   
   <xsl:template match="record" mode="institutions">
-    <xsl:param name="id"/>
+    <xsl:variable name="id">
+      <xsl:value-of select="guid"/>
+      <xsl:value-of select="priref[not(../guid!='')]"/>
+    </xsl:variable>
     <sdo:Organization rdf:about="{$baseUri}/{$id}">
       <xsl:apply-templates select="." mode="metadata">
         <xsl:with-param name="database" select="$database"/>
         <xsl:with-param name="id" select="$id"/>
       </xsl:apply-templates>
-      <xsl:apply-templates select="name | nationality.lref | occupation.lref"/>
+      <xsl:if test="used_for/name[text()!='']">
+        <sdo:alternateName><xsl:value-of select="./used_for/name"/></sdo:alternateName>
+      </xsl:if>
+      <xsl:apply-templates select="name | nationality.lref | occupation.lref | used_for/guid"/>
       <xsl:apply-templates select="name.type/value[@lang='neutral'] | name.type/value[@lang='neutral'] " mode="link_to_skos_concept"/>
     </sdo:Organization>
   </xsl:template>
@@ -79,9 +86,12 @@
         <xsl:with-param name="database" select="$database"/>
         <xsl:with-param name="id" select="$id"/>
       </xsl:apply-templates>
+      <xsl:if test="used_for.name">
+        <sdo:alternateName><xsl:value-of select="."/></sdo:alternateName>
+      </xsl:if>
       <xsl:apply-templates select="name | surname | biography | 
         birth.place.lref | death.place.lref | birth.date.start | 
-        death.date.start | guid | nationality | occupation"/>
+        death.date.start | guid | nationality | occupation | used_for/guid"/>
       <xsl:apply-templates select="name.type/value[@lang='neutral'] | name.type/value[@lang='neutral'] " mode="link_to_skos_concept"/>
     </sdo:Person>
   </xsl:template>
@@ -96,12 +106,12 @@
     <sdo:nationality>
       <xsl:attribute name="rdf:resource">
         <xsl:value-of select="$baseUri"/>
-        <xsl:if test="not(../guid)">
+        <xsl:if test="not(../nationality/guid)">
           <xsl:text>/thesaurus</xsl:text>
         </xsl:if>
         <xsl:text>/</xsl:text>
-        <xsl:value-of select="../guid"/>
-        <xsl:value-of select=".[not(../guid!='')]"/>
+        <xsl:value-of select="../nationality/guid"/>
+        <xsl:value-of select=".[not(../nationality/guid!='')]"/>
       </xsl:attribute>
     </sdo:nationality>
   </xsl:template>
@@ -109,12 +119,12 @@
     <sdo:hasOccupation>
       <xsl:attribute name="rdf:resource">
         <xsl:value-of select="$baseUri"/>
-        <xsl:if test="not(../guid)">
+        <xsl:if test="not(../occupation/guid)">
           <xsl:text>/thesaurus</xsl:text>
         </xsl:if>
         <xsl:text>/</xsl:text>
-        <xsl:value-of select="../guid"/>
-        <xsl:value-of select=".[not(../guid!='')]"/>
+        <xsl:value-of select="../occupation/guid"/>
+        <xsl:value-of select=".[not(../occupation/guid!='')]"/>
       </xsl:attribute>
     </sdo:hasOccupation>
   </xsl:template>
@@ -122,10 +132,12 @@
     <sdo:Country>
       <xsl:attribute name="rdf:about">
         <xsl:value-of select="$baseUri"/>
-        <xsl:text>/thesaurus</xsl:text>
+        <xsl:if test="not(../nationality/guid)">
+          <xsl:text>/thesaurus</xsl:text>
+        </xsl:if>
         <xsl:text>/</xsl:text>
-        <xsl:value-of select="../guid"/>
-        <xsl:value-of select=".[not(../guid!='')]"/>
+        <xsl:value-of select="../nationality/guid"/>
+        <xsl:value-of select=".[not(../nationality/guid!='')]"/>
       </xsl:attribute>
       <sdo:name><xsl:value-of select="../name"/></sdo:name>
     </sdo:Country>
@@ -135,13 +147,19 @@
     <sdo:Occupation>
       <xsl:attribute name="rdf:about">
         <xsl:value-of select="$baseUri"/>
-        <xsl:text>/thesaurus</xsl:text>
+        <xsl:if test="not(../occupation/guid)">
+          <xsl:text>/thesaurus</xsl:text>
+        </xsl:if>
         <xsl:text>/</xsl:text>
-        <xsl:value-of select="../guid"/>
-        <xsl:value-of select=".[not(../guid!='')]"/>
+        <xsl:value-of select="../occupation/guid"/>
+        <xsl:value-of select=".[not(../occupation/guid!='')]"/>
       </xsl:attribute>
       <sdo:name><xsl:value-of select="../name"/></sdo:name>
     </sdo:Occupation>
+  </xsl:template>
+  
+  <xsl:template match="used_for/guid">
+    <sdo:seeAlso rdf:resource="{$baseUri}/{.}"/>
   </xsl:template>
   
   <xsl:template match="name.type/value" mode="link_to_skos_concept">
