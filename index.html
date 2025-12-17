@@ -69,6 +69,8 @@
               const tr = document.createElement('tr')
               tr.id = ID
               tr.dataset.baseURL = `https://nde-apw.adlibhosting.com/${ID}/oai.ashx`
+              tr.dataset.baseURL = `https://nde-apw.adlibhosting.com/${ID}/wwwopac.ashx`
+
 
               let cell = document.createElement('td')
               cell.innerHTML = Triply_LDMax === 'T'
@@ -128,12 +130,13 @@
     Links
   </button>
   <ul class="dropdown-menu">
-    <li><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=Identify">OAI <code>Identify</code></a></li>
-    <li><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=ListRecords&amp;set=collect&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (collect)</a></li>
-    <li><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=ListRecords&amp;set=person&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (person)</a></li>
-    <li><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=ListRecords&amp;set=media&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (media)</a></li>
-    <li><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=ListRecords&amp;set=thesau&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (thesau)</a></li>
-    <li><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=ListRecords&amp;set=geothesau&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (geothesau)</a></li>
+    <li style="display: none"><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=Identify">OAI <code>Identify</code></a></li>
+    <li style="display: none"><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=ListRecords&amp;set=collect&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (collect)</a></li>
+    <li style="display: none"><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=ListRecords&amp;set=person&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (person)</a></li>
+    <li style="display: none"><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=ListRecords&amp;set=media&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (media)</a></li>
+    <li style="display: none"><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=ListRecords&amp;set=thesau&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (thesau)</a></li>
+    <li style="display: none"><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?verb=ListRecords&amp;set=geothesau&amp;metadataPrefix=sdo">OAI <code>ListRecords</code> (geothesau)</a></li>
+   <li><a target="_blank" class="dropdown-item" href="${tr.dataset.baseURL}?database=collect&search=priref>0">Collect records (API)</a></li>
     <li>
       <hr class="dropdown-divider">
     </li>
